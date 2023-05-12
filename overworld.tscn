@@ -1,0 +1,146 @@
+[gd_scene load_steps=11 format=3 uid="uid://5ckxgrc4d83q"]
+
+[ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
+[ext_resource type="Material" uid="uid://brthn83c4qide" path="res://Materials/TestMaterials/mud-with-vegetation-bl/mudwithvegetation.tres" id="4_njn5j"]
+[ext_resource type="PackedScene" uid="uid://cupbpgahfinyf" path="res://FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
+[ext_resource type="PackedScene" uid="uid://c1n1w1314sa2n" path="res://MiscItems/test_ladder.tscn" id="8_ccw4p"]
+[ext_resource type="PackedScene" uid="uid://ri506muwvh14" path="res://Enemies/test_person.tscn" id="9_fdcel"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ge4ds"]
+
+[sub_resource type="Sky" id="Sky_kkf14"]
+sky_material = SubResource("ProceduralSkyMaterial_ge4ds")
+
+[sub_resource type="Environment" id="Environment_edold"]
+background_mode = 2
+sky = SubResource("Sky_kkf14")
+ambient_light_source = 3
+reflected_light_source = 2
+ssr_enabled = true
+ssao_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0cwlw"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tfd0j"]
+properties/0/path = NodePath("network_peer:position")
+properties/0/spawn = true
+properties/0/sync = true
+properties/1/path = NodePath("network_peer:rotation")
+properties/1/spawn = true
+properties/1/sync = true
+
+[node name="Overworld" type="Node3D"]
+script = ExtResource("1_jm50p")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_edold")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.86845, -0.275475, -0.412199, 8.88178e-16, -0.831421, 0.555643, -0.495777, -0.482548, -0.722048, -0.164675, 4.50588, -8.0492)
+shadow_enabled = true
+
+[node name="StaticLevel" type="Node3D" parent="."]
+
+[node name="Platform" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.333188, -0.0895852, 0.0154278)
+use_collision = true
+size = Vector3(8.65098, 1, 10.7764)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Platform6" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(0.996267, -0.0863211, 0, 0.0863211, 0.996267, 0, 0, 0, 1, -9.15834, -15.2979, 0.0154278)
+use_collision = true
+size = Vector3(8.65098, 1, 10.7764)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform6"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform6/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Platform7" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(0.996267, -0.0863211, 0, 0.0863211, 0.996267, 0, 0, 0, 1, -14.7207, -28.2961, 0.0628521)
+use_collision = true
+size = Vector3(8.65098, 1, 10.7764)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform7"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform7/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Platform3" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 143.925, -0.315903, 33.2965)
+use_collision = true
+size = Vector3(306.227, 1, 56.503)
+material = ExtResource("4_njn5j")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform3/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Platform5" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 537.465, -0.315903, 33.2965)
+use_collision = true
+size = Vector3(306.227, 1, 56.503)
+material = ExtResource("4_njn5j")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform5"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform5/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Platform4" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(0.962113, -0.27265, 0, 0.27265, 0.962113, 0, 0, 0, 1, 296.762, -0.315903, 33.2965)
+use_collision = true
+size = Vector3(74.507, 1, 56.503)
+material = ExtResource("4_njn5j")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform4/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Platform2" type="CSGBox3D" parent="StaticLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.93075, 2.71946, 0.0154278)
+use_collision = true
+size = Vector3(8.65098, 1, 10.7764)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StaticLevel/Platform2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform2/StaticBody3D"]
+shape = SubResource("BoxShape3D_0cwlw")
+
+[node name="Items" type="Node3D" parent="."]
+
+[node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 0.450023, -0.261706)
+disable_mode = 1
+mass = 0.2
+
+[node name="SodaCan2" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 0.450023, -0.11203)
+disable_mode = 1
+mass = 0.2
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_tfd0j")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Enemies/test_person.tscn")
+spawn_path = NodePath("..")
+spawn_limit = 5
+
+[node name="TestLadder" parent="." instance=ExtResource("8_ccw4p")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
+metadata/Ladder = true
+
+[node name="network_peer" parent="." instance=ExtResource("9_fdcel")]
+transform = Transform3D(-0.0642362, 0, -0.997935, 0, 1, 0, 0.997935, 0, -0.0642362, -1.02628, 0.431496, 9.26354)
+
+[node name="Respawn" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.68642, 4.98645, -0.675611)
+metadata/Spawn = true
