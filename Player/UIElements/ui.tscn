@@ -409,6 +409,7 @@ tint_progress = Color(0, 1, 0, 1)
 
 [node name="Connect" type="Button" parent="."]
 process_mode = 3
+visible = false
 layout_mode = 0
 offset_left = 815.0
 offset_top = 13.0
@@ -418,6 +419,7 @@ text = "CONNECT"
 
 [node name="Host" type="Button" parent="."]
 process_mode = 3
+visible = false
 layout_mode = 0
 offset_left = 961.0
 offset_top = 13.0
@@ -427,6 +429,7 @@ text = "Host"
 
 [node name="IPBOX" type="TextEdit" parent="."]
 process_mode = 3
+visible = false
 layout_mode = 0
 offset_left = 135.0
 offset_top = 13.0
@@ -436,6 +439,7 @@ placeholder_text = "IP"
 
 [node name="PORT" type="TextEdit" parent="."]
 process_mode = 3
+visible = false
 layout_mode = 0
 offset_left = 633.0
 offset_top = 13.0

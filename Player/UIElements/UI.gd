@@ -55,7 +55,7 @@ func _on_player_death():
 
 func _on_connect_pressed():
 	network._connectServer(get_node("IPBOX").text, int(get_node("PORT").text))
-	print(multiplayer.get_unique_id())
+	#print(multiplayer.get_unique_id())
 
 
 func _on_host_pressed():

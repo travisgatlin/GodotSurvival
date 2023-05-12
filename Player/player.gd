@@ -62,7 +62,7 @@ func _ready():
 	playerGlobals.emit_signal("barChange", "health", playerStats["health"])
 	self.set_global_rotation(Vector3(0,0,0))
 func _physics_process(delta):
-	if get_node("LadderRay").is_colliding():
+	if get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding():
 		ladderUp()
 	else:
 		onLadder = false
@@ -180,15 +180,16 @@ func _staminaregen():
 func _jump():
 	if onLadder == true:
 		onLadder = false
-		get_node("LadderRay").enabled = false
-		await get_tree().create_timer(0.5).timeout
-		get_node("LadderRay").enabled = true
+		get_node("FirstPerson/DummyAnimated/LadderRay").enabled = false
+		await get_tree().create_timer(0.2).timeout
+		get_node("FirstPerson/DummyAnimated/LadderRay").enabled = true
 		
 	
 	if is_on_floor() and stamina["total"] > stamina["jumping"]:
 		_crouchCheck()
 		if crouching["crouchCheck"] == false or crouching["isCrouching"] == false:
-			animationController("Jump")
+			if onLadder == false:
+				animationController("Jump")
 			velocity.y = playerStats["jumpHeight"]
 			_staminadrain(stamina["jumping"])
 
@@ -255,18 +256,22 @@ func _incomingDamage(amount):
 func ladderUp():
 	var currentObject = null
 	var ladderObjects = []
-	for n in get_node("LadderRay").get_collision_count():
-		currentObject=get_node("LadderRay").get_collider(n).get_parent().get_parent()
+	for n in get_node("FirstPerson/DummyAnimated/LadderRay").get_collision_count():
+		currentObject=get_node("FirstPerson/DummyAnimated/LadderRay").get_collider(n).get_parent().get_parent()
 		if currentObject.has_meta("Ladder") == true:
 			ladderObjects.append("Ladder")
-	if ladderObjects.has("Ladder") and get_node("LadderRay").is_colliding()==true:
+	if ladderObjects.has("Ladder") and get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding()==true:
 		onLadder = true
 		if Input.is_action_pressed("forward"):
+			animationController("Climb Ladder")
 			velocity.y = playerStats["climbLadderSpeed"]
 		else: 
 			velocity.y = 0
 		if Input.is_action_pressed("back"):
+			animationController("Descend Ladder")
 			velocity.y = playerStats["climbLadderSpeed"] * -1
+		if onLadder == true and velocity.y < 1:
+			animationController("Climb Idle")
 	else: 
 		onLadder = false
 
