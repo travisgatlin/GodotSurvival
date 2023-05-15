@@ -11,6 +11,7 @@ func _ready():
 	playerDeath = false
 	playerGlobals.connect("barChange",_on_player_bar_change)
 	playerGlobals.connect("playerDeath", _on_player_death)
+	playerGlobals.connect("debug", _debugbox)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if Input.is_action_just_pressed("ui_cancel") and inventory == false or playerDeath == true:
@@ -60,3 +61,6 @@ func _on_connect_pressed():
 
 func _on_host_pressed():
 	network._hostServer(get_node("PORT").text)
+
+func _debugbox(string):
+	get_node("Debug").text = string

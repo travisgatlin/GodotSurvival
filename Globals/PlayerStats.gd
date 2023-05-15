@@ -7,6 +7,7 @@ signal barChange(key, value)
 signal respawnPlayer()
 signal playerDeath()
 signal enterVehicle(state, id)
+signal debug (string)
 func _ready():
 		if spawnPoint == null:
 			for i in get_node("../Overworld").get_children():

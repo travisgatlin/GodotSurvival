@@ -15,8 +15,8 @@ func _ready():
 	#multiplayer.peer_connected()
 
 func _process(_delta):
-	print(multiplayer.get_peers())
-
+	#print(multiplayer.get_peers())
+	pass
 
 func _on_ui_respawn_player():
 	playerGlobals.UI.queue_free()
@@ -31,4 +31,3 @@ func _on_ui_respawn_player():
 func _remotePlayerConnect():
 	#var newPeer = peer.instantiate()
 	print ("player connected!")
-	

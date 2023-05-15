@@ -2,7 +2,31 @@ extends CharacterBody3D
 signal getInVehicle(state, id)
 @onready var globals = get_node("/root/Config")
 @onready var playerGlobals = get_node("/root/PlayerStats")
-@onready var state_machine = get_node("FirstPerson/MainTree")["parameters/playback"]
+#@onready var state_machine = get_node("FirstPerson/MainTree")["parameters/playback"]
+@onready var mainTree = get_node("FirstPerson/MainTree")
+@onready var animationBlends = {
+	"Movement": "parameters/Locomotion/transition_request",
+	"Jump": ["parameters/JumpTransition/transition_request"],
+	"Shooting": ["parameters/ShootingBlend/blend_amount"],
+	"Death": ["parameters/DeathTrans/transition_request"]
+}
+@onready var animationTrees = {
+	"Walking": ["parameters/Walking/playback"],
+	"Sprinting": ["parameters/Sprinting/playback"],
+	"Crouching": ["parameters/Crouching/playback"],
+	"Jump": ["parameters/Jumping/playback"],
+	"Shooting": ["parameters/Shooting/playback"]
+}
+var animationStates = {
+	"idle": true,
+	"walk": false,
+	"run": false,
+	"climb": false,
+	"jump": false,
+	"falling":false,
+	"ladning":false,
+}
+
 var inWater = false
 var inVehicle = false
 var currentVehicle = null
@@ -62,6 +86,7 @@ func _ready():
 	playerGlobals.emit_signal("barChange", "health", playerStats["health"])
 	self.set_global_rotation(Vector3(0,0,0))
 func _physics_process(delta):
+	playerGlobals.emit_signal("debug", str(animationStates))
 	if get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding():
 		ladderUp()
 	else:
@@ -75,17 +100,20 @@ func _physics_process(delta):
 		_on_death()
 	if not is_on_floor() and inWater == false and inVehicle==false:
 		velocity.y -= gravity * delta
+		animationStates["falling"] = true
 		_fallDamage()
 	else:
+		animationStates["falling"] = false
+		animationStates["landing"] = true
 		_fallDamage()
 		
 	if dead == false:
 		#print(get_node("BodyCollision2").get_global_rotation())
 		if get_position_delta() == Vector3(0,0,0):
 			if crouching["isCrouching"] == false and is_on_floor():
-				animationController("Idle")
+				animationStates["idle"] = true
 			else:
-				animationController("crouch")
+				animationStates["idle"] = false
 		
 		if inVehicle == false:
 			if Input.is_action_just_pressed("jump"):
@@ -119,7 +147,7 @@ func _physics_process(delta):
 		move_and_slide()
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
-	animationController("Falling Back")
+	#animationController("Falling Back")
 	#get_node("BodyCollision").shape.height = 0.5
 	dead = true
 	
@@ -147,25 +175,17 @@ func _sprint():
 	if crouching["isCrouching"] == false and stamina["total"] > 0:
 		currentRunSpeed = playerStats["runSpeed"]
 		if is_on_floor():
-			animationController("Run")
+			animationStates["run"] = true
+			animationStates["walk"] = false
 		if velocity.z != 0:
 			_staminadrain(stamina["sprinting"])
 	else:
-		animationController("Walking")
+		animationStates["run"] = false
 		_walk()
 
 func _walk():
 	currentRunSpeed = playerStats["walkSpeed"]
-	if Input.is_action_pressed("forward") and is_on_floor():
-		animationController("Walking")
-		if crouching["isCrouching"] == true:
-			animationController("Crouch Walk")
-	elif Input.is_action_pressed("back") and is_on_floor() :
-		animationController("Walking Backwards")
-	elif Input.is_action_pressed("left") and is_on_floor():
-		animationController("Strafe Left")
-	elif Input.is_action_pressed("right") and is_on_floor():
-		animationController("Strafe Right")
+	animationStates["walk"] = true
 func _staminadrain(amount):
 	get_node("StaminaRegen").start(stamina["regenWaitTime"])
 	stamina["total"] = stamina["total"] - amount
@@ -189,7 +209,7 @@ func _jump():
 		_crouchCheck()
 		if crouching["crouchCheck"] == false or crouching["isCrouching"] == false:
 			if onLadder == false:
-				animationController("Jump")
+				animationStates["jump"] = true
 			velocity.y = playerStats["jumpHeight"]
 			_staminadrain(stamina["jumping"])
 
@@ -238,14 +258,15 @@ func _vehicleSelect():
 func _fallDamage():
 	if not is_on_floor():
 		if onLadder == false and crouching["isCrouching"] == false:
-			animationController("FallingIdle")
+			pass
+			#animationController("FallingIdle")
 		if self.velocity.y < -10:
 			lastVelocity = self.velocity.y
 	else:
 		calculatedDamage = lastVelocity*-1*playerStats["fallDamageMultiplier"]
 		lastVelocity=0
 		if calculatedDamage > 0:
-			animationController("Hard Landing")
+			#animationController("Hard Landing")
 			_incomingDamage(round(calculatedDamage))
 func _incomingDamage(amount):
 	incomingDamage = amount
@@ -263,22 +284,24 @@ func ladderUp():
 	if ladderObjects.has("Ladder") and get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding()==true:
 		onLadder = true
 		if Input.is_action_pressed("forward"):
-			animationController("Climb Ladder")
+			animation("Movement","Walk")
 			velocity.y = playerStats["climbLadderSpeed"]
 		else: 
 			velocity.y = 0
 		if Input.is_action_pressed("back"):
-			animationController("Descend Ladder")
+			#animationController("Descend Ladder")
 			velocity.y = playerStats["climbLadderSpeed"] * -1
 		if onLadder == true and velocity.y < 1:
-			animationController("Climb Idle")
+			#animationController("Climb Idle")
+			pass
 	else: 
 		onLadder = false
-
-func animationController(animation):
-	if state_machine.get_current_node() != animation:
-		state_machine.travel(animation)
 func respawnSetup():
 	respawnFlag = true
 	get_node("FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/BoneAttachment3D/Deathcam").clear_current(false)
-	
+		
+func animation(key,state:=str(null),destination:="start"):
+	if state != null and state != mainTree["parameters/Locomotion/current_state"]:
+		mainTree.set(animationBlends[key],state)
+	if destination != "start" and state != mainTree["parameters/Locomotion/current_state"]:
+		mainTree[animationTrees[state]].travel(destination)
