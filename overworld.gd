@@ -21,6 +21,7 @@ func _process(_delta):
 func _on_ui_respawn_player():
 	playerGlobals.UI.queue_free()
 	playerGlobals.playerName.queue_free()
+	await get_tree().create_timer(0.1).timeout
 	var playerSpawned = player.instantiate()
 	var uiSpawn = UI.instantiate()
 	playerSpawned.respawnSetup()

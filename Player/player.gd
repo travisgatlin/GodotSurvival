@@ -25,6 +25,7 @@ var calculatedDamage = 0
 var onLadder = false
 var respawnFlag = false
 var initialSpawn = true
+var input_dir = Vector2(0,0)
 @export var inventory = []
 
 @export var dead = false
@@ -90,9 +91,7 @@ func _physics_process(delta):
 		#get_node(".").global_transform.origin = currentVehicle.get_global_position()
 		#currentVehicle.seatCam.make_current()
 		pass
-	
-	if playerStats["health"] <= 0:
-		_on_death()
+
 	
 	if not is_on_floor() and inWater == false and inVehicle==false and onLadder == false:
 		velocity.y -= gravity * delta
@@ -115,7 +114,7 @@ func _physics_process(delta):
 			
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-			var input_dir = Input.get_vector("left","right","forward","back")
+			input_dir = Input.get_vector("left","right","forward","back")
 			var direction = (get_node("FirstPerson/PlayerView").transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 			
 			if direction and onLadder == false:
@@ -124,11 +123,6 @@ func _physics_process(delta):
 			else:
 				velocity.x = move_toward(velocity.x, 0, currentRunSpeed)
 				velocity.z = move_toward(velocity.z, 0, currentRunSpeed)
-			
-			if crouching["isCrouching"] == false:
-				moveAnimController("Front","Side", input_dir)
-			else:
-				moveAnimController("Crouch Front", "Crouch Side", input_dir)
 			playerGlobals.emit_signal("debug", str(input_dir))
 		
 		if Input.is_action_just_pressed("action"):
@@ -138,6 +132,15 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("leaveVehicle") and inVehicle == true:
 			_getOutOfVehicle()
 		move_and_slide()
+
+func _process(delta):
+	if crouching["isCrouching"] == false:
+		moveAnimController("Front","Side", input_dir)
+	else:
+		moveAnimController("Crouch Front", "Crouch Side", input_dir)
+	if playerStats["health"] <= 0:
+		_on_death()
+
 
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
@@ -299,5 +302,3 @@ func moveAnimController(moveset1,moveset2,vector2):
 	var tween = create_tween().set_parallel(true)
 	tween.tween_property($FirstPerson/MainTree, animationBlends[moveset1], vector2.y, 0.1)
 	tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
-#	mainTree.set(animationBlends[str(moveset1)], vector2.y)
-#	mainTree.set(animationBlends[str(moveset2)], vector2.x)
