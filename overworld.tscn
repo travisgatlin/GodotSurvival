@@ -138,6 +138,10 @@ spawn_limit = 5
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
 metadata/Ladder = true
 
+[node name="TestLadder2" parent="." instance=ExtResource("8_ccw4p")]
+transform = Transform3D(0.973175, 0, 0.230067, 0, 1, 0, -0.230067, 0, 0.973175, -4.49721, 0.671872, -0.22945)
+metadata/Ladder = true
+
 [node name="network_peer" parent="." instance=ExtResource("9_fdcel")]
 transform = Transform3D(-0.0642362, 0, -0.997935, 0, 1, 0, 0.997935, 0, -0.0642362, -1.02628, 0.431496, 9.26354)
 
