@@ -449,8 +449,10 @@ placeholder_text = "PORT"
 
 [node name="Debug" type="RichTextLabel" parent="."]
 layout_mode = 1
-offset_right = 216.0
-offset_bottom = 292.0
+offset_left = 956.0
+offset_top = -7.0
+offset_right = 1153.0
+offset_bottom = 285.0
 
 [connection signal="tab_changed" from="TabContainer/Inventory/Categories" to="TabContainer/Inventory/Categories" method="_on_tab_changed"]
 [connection signal="item_activated" from="TabContainer/Inventory/Categories/All" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
