@@ -51,8 +51,6 @@ func _on_suicide_pressed():
 func saveLoadMenu():
 	get_node("../SaveLoad").visible = true
 	get_node("../Exit").visible = true
-	
-	
 
 
 func _on_exit_pressed():

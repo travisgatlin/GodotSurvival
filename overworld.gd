@@ -7,12 +7,9 @@ extends Node3D
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	playerGlobals.connect("respawnPlayer", _on_ui_respawn_player)
-	var playerSpawn = player.instantiate()
-	var uiSpawn = UI.instantiate()
-	add_child(playerSpawn)
-	add_child(uiSpawn)
-	#networking.connect("playerConnected",_remotePlayerConnect)
-	#multiplayer.peer_connected()
+	multiplayer.peer_connected.connect(spawnPlayers)
+	multiplayer.peer_disconnected.connect(disconnected)
+	playerGlobals.connect("initialSpawn", localPlayerInitSpawn)
 
 func _process(_delta):
 	#print(multiplayer.get_peers())
@@ -21,14 +18,27 @@ func _process(_delta):
 func _on_ui_respawn_player():
 	playerGlobals.UI.queue_free()
 	playerGlobals.playerName.queue_free()
-	await get_tree().create_timer(0.1).timeout
-	var playerSpawned = player.instantiate()
-	var uiSpawn = UI.instantiate()
-	playerSpawned.respawnSetup()
-	add_child(playerSpawned)
-	add_child(uiSpawn)
+	if !self.has_node(playerGlobals.playerPath):
+		var playerSpawned = player.instantiate()
+		var uiSpawn = UI.instantiate()
+		playerSpawned.respawnSetup()
+		#await get_tree().create_timer(0.1).timeout
+		add_child(playerSpawned)
+		add_child(uiSpawn)
 
 
 func _remotePlayerConnect():
 	#var newPeer = peer.instantiate()
 	print ("player connected!")
+
+func spawnPlayers(id: int):
+	print (id)
+
+func disconnected():
+	print ("oh shit he gone")
+
+func localPlayerInitSpawn():
+	var playerSpawn = player.instantiate()
+	var uiSpawn = UI.instantiate()
+	add_child(playerSpawn)
+	add_child(uiSpawn)

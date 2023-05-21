@@ -14,6 +14,7 @@ func _process(_delta):
 
 func _on_item_activated(index):
 	if index == 0:
+		#self.set("item_0/disabled", true)
 		playerGlobals.emit_signal("respawnPlayer")
 	elif index == 1:
 		get_tree().quit()

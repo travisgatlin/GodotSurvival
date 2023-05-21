@@ -1,22 +1,27 @@
 extends Node
 var peer = ENetMultiplayerPeer.new()
-signal playerConnected()
+var defaultPort = 9090
+var playerList = []
 func _ready():
+	multiplayer.peer_connected.connect(playerConnected)
+	multiplayer.peer_disconnected.connect(playerDisconnected)
+func _process(_delta):
 	pass
-#func _process(delta):
 	#if multiplayer.peer_connected():
 		#_onPlayerConnect()
 
 
-func _hostServer(port):
+func hostServer(port):
 	peer.create_server(int(port))
 	multiplayer.multiplayer_peer = peer
-	#multiplayer.peer_connected.connect(_onPlayerConnect)
 	
 	
-func _connectServer(ip, port):
+func connectServer(ip, port):
 	peer.create_client(ip, port)
 	multiplayer.multiplayer_peer = peer
+	
+func playerConnected(id):
+	print("connected"+ " " + str(id))
 
-func _onPlayerConnect():
-	playerConnected.emit()
+func playerDisconnected(id):
+	print("player " + str(id) + " has disconnected.")

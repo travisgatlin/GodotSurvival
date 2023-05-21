@@ -250,7 +250,6 @@ expand_mode = 1
 stretch_mode = 4
 
 [node name="DeathScreen" type="ItemList" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -407,47 +406,8 @@ texture_under = ExtResource("14_13uhb")
 texture_progress = ExtResource("15_3y7sw")
 tint_progress = Color(0, 1, 0, 1)
 
-[node name="Connect" type="Button" parent="."]
-process_mode = 3
-visible = false
-layout_mode = 0
-offset_left = 815.0
-offset_top = 13.0
-offset_right = 954.0
-offset_bottom = 61.0
-text = "CONNECT"
-
-[node name="Host" type="Button" parent="."]
-process_mode = 3
-visible = false
-layout_mode = 0
-offset_left = 961.0
-offset_top = 13.0
-offset_right = 1100.0
-offset_bottom = 61.0
-text = "Host"
-
-[node name="IPBOX" type="TextEdit" parent="."]
-process_mode = 3
-visible = false
-layout_mode = 0
-offset_left = 135.0
-offset_top = 13.0
-offset_right = 621.0
-offset_bottom = 59.0
-placeholder_text = "IP"
-
-[node name="PORT" type="TextEdit" parent="."]
-process_mode = 3
-visible = false
-layout_mode = 0
-offset_left = 633.0
-offset_top = 13.0
-offset_right = 745.0
-offset_bottom = 59.0
-placeholder_text = "PORT"
-
 [node name="Debug" type="RichTextLabel" parent="."]
+visible = false
 layout_mode = 1
 offset_left = 956.0
 offset_top = -7.0
@@ -467,5 +427,3 @@ offset_bottom = 285.0
 [connection signal="item_activated" from="DeathScreen" to="DeathScreen" method="_on_item_activated"]
 [connection signal="playerRespawn" from="DeathScreen" to="." method="_on_death_screen_player_respawn"]
 [connection signal="pressed" from="Exit" to="Pause Menu" method="_on_exit_pressed"]
-[connection signal="pressed" from="Connect" to="." method="_on_connect_pressed"]
-[connection signal="pressed" from="Host" to="." method="_on_host_pressed"]

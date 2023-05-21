@@ -1,10 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://5ckxgrc4d83q"]
+[gd_scene load_steps=9 format=3 uid="uid://5ckxgrc4d83q"]
 
 [ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
 [ext_resource type="Material" uid="uid://brthn83c4qide" path="res://Materials/TestMaterials/mud-with-vegetation-bl/mudwithvegetation.tres" id="4_njn5j"]
 [ext_resource type="PackedScene" uid="uid://cupbpgahfinyf" path="res://FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
 [ext_resource type="PackedScene" uid="uid://c1n1w1314sa2n" path="res://MiscItems/test_ladder.tscn" id="8_ccw4p"]
-[ext_resource type="PackedScene" uid="uid://ri506muwvh14" path="res://Enemies/test_person.tscn" id="9_fdcel"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ge4ds"]
 
@@ -21,15 +20,7 @@ ssao_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0cwlw"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tfd0j"]
-properties/0/path = NodePath("network_peer:position")
-properties/0/spawn = true
-properties/0/sync = true
-properties/1/path = NodePath("network_peer:rotation")
-properties/1/spawn = true
-properties/1/sync = true
-
-[node name="Overworld" type="Node3D"]
+[node name="Overworld" type="Node3D" groups=["Players"]]
 script = ExtResource("1_jm50p")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -126,13 +117,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 0.450023, -0.11203)
 disable_mode = 1
 mass = 0.2
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_tfd0j")
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Enemies/test_person.tscn")
 spawn_path = NodePath("..")
-spawn_limit = 5
 
 [node name="TestLadder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
@@ -142,9 +129,9 @@ metadata/Ladder = true
 transform = Transform3D(0.973175, 0, 0.230067, 0, 1, 0, -0.230067, 0, 0.973175, -4.49721, 0.671872, -0.22945)
 metadata/Ladder = true
 
-[node name="network_peer" parent="." instance=ExtResource("9_fdcel")]
-transform = Transform3D(-0.0642362, 0, -0.997935, 0, 1, 0, 0.997935, 0, -0.0642362, -1.02628, 0.431496, 9.26354)
-
 [node name="Respawn" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.68642, 4.98645, -0.675611)
 metadata/Spawn = true
+
+[node name="MP SPAWN" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.29749, 12.3269)

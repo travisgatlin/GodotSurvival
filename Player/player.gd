@@ -13,7 +13,8 @@ signal getInVehicle(state, id)
 	"Front": "parameters/Front/blend_amount",
 	"Crouch Front": "parameters/Crouch Front/blend_amount",
 	"Crouch Side": "parameters/Crouch Side/blend_amount",
-	"Falling": "parameters/Falling/blend_amount"
+	"Falling": "parameters/Falling/blend_amount",
+	"Ladder": "parameters/Climb/scale",
 }
 
 var inWater = false
@@ -82,6 +83,7 @@ func _ready():
 	self.set_global_rotation(Vector3(0,0,0))
 	
 func _physics_process(delta):
+	input_dir = Input.get_vector("left","right","forward","back")
 	if get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding():
 		ladderUp()
 	else:
@@ -100,7 +102,6 @@ func _physics_process(delta):
 		_fallDamage()
 		
 	if dead == false:
-		#print(get_node("BodyCollision2").get_global_rotation())
 		
 		if inVehicle == false:
 			if Input.is_action_just_pressed("jump"):
@@ -109,12 +110,11 @@ func _physics_process(delta):
 				_crouch()
 			if Input.is_action_pressed("sprint"):
 				_sprint()
-			elif crouching["isCrouching"] == false:
+			elif crouching["isCrouching"] == false and onLadder == false:
 				_walk()
 			
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-			input_dir = Input.get_vector("left","right","forward","back")
 			var direction = (get_node("FirstPerson/PlayerView").transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 			
 			if direction and onLadder == false:
@@ -133,11 +133,14 @@ func _physics_process(delta):
 			_getOutOfVehicle()
 		move_and_slide()
 
-func _process(delta):
-	if crouching["isCrouching"] == false:
+func _process(_delta):
+	#print(mainTree.get(animationBlends["Ladder"]))
+	if crouching["isCrouching"] == false and onLadder == false:
 		moveAnimController("Front","Side", input_dir)
-	else:
+	elif crouching["isCrouching"] == true:
 		moveAnimController("Crouch Front", "Crouch Side", input_dir)
+	elif onLadder == true:
+		moveAnimController("Ladder", null, input_dir)
 	if playerStats["health"] <= 0:
 		_on_death()
 
@@ -254,6 +257,8 @@ func _fallDamage():
 	if not is_on_floor():
 		if onLadder == false and crouching["isCrouching"] == false:
 			animation("Falling", false, str(false), 1)
+		elif onLadder == true:
+			animation("Falling", false, str(false), 0)
 		if self.velocity.y < -10:
 			lastVelocity = self.velocity.y
 	else:
@@ -277,12 +282,9 @@ func ladderUp():
 			ladderObjects.append("Ladder")
 	if ladderObjects.has("Ladder") and get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding()==true:
 		onLadder = true
-		if Input.is_action_pressed("forward"):
-			velocity.y = playerStats["climbLadderSpeed"]
-		else: 
-			velocity.y = 0
-		if Input.is_action_pressed("back"):
-			velocity.y = playerStats["climbLadderSpeed"] * -1
+		if onLadder == true:
+			animation("Movement", false,"OnLadder")
+			velocity.y = input_dir.y*-playerStats["climbLadderSpeed"]
 	else: 
 		onLadder = false
 func respawnSetup():
@@ -300,5 +302,7 @@ func animation(key,oneshot:=true,state:=str(false),value:=0, time:=0.2):
 
 func moveAnimController(moveset1,moveset2,vector2):
 	var tween = create_tween().set_parallel(true)
-	tween.tween_property($FirstPerson/MainTree, animationBlends[moveset1], vector2.y, 0.1)
-	tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
+	if moveset1 != null:
+		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset1], vector2.y, 0.1)
+	if moveset2 != null:
+		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
