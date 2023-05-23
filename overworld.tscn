@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://5ckxgrc4d83q"]
+[gd_scene load_steps=17 format=3 uid="uid://5ckxgrc4d83q"]
 
 [ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
 [ext_resource type="Material" uid="uid://brthn83c4qide" path="res://Materials/TestMaterials/mud-with-vegetation-bl/mudwithvegetation.tres" id="4_njn5j"]
@@ -19,6 +19,61 @@ ssr_enabled = true
 ssao_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0cwlw"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1drqi"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_dqxhr"]
+noise_type = 3
+metadata/_preview_in_3d_space_ = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_esmlq"]
+in_3d_space = true
+seamless = true
+as_normal_map = true
+normalize = false
+noise = SubResource("FastNoiseLite_dqxhr")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3qlo2"]
+metadata/_preview_in_3d_space_ = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_k7v6j"]
+width = 2048
+height = 2048
+in_3d_space = true
+seamless = true
+as_normal_map = true
+bump_strength = 12.3
+noise = SubResource("FastNoiseLite_3qlo2")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nkl3c"]
+noise_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_38tek"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_nkl3c")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nabb3"]
+blend_mode = 1
+depth_draw_mode = 1
+metallic = 1.0
+metallic_specular = 1.0
+roughness = 0.0
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_k7v6j")
+clearcoat_roughness = 0.0
+heightmap_enabled = true
+heightmap_scale = 5.646
+heightmap_deep_parallax = true
+heightmap_min_layers = 10
+heightmap_max_layers = 32
+heightmap_texture = SubResource("NoiseTexture2D_esmlq")
+refraction_enabled = true
+refraction_scale = 0.32
+refraction_texture = SubResource("NoiseTexture2D_38tek")
+uv1_scale = Vector3(50, 50, 50)
+uv1_world_triplanar = true
+uv2_scale = Vector3(50, 50, 50)
+uv2_triplanar = true
 
 [node name="Overworld" type="Node3D" groups=["Players"]]
 script = ExtResource("1_jm50p")
@@ -135,3 +190,8 @@ metadata/Spawn = true
 
 [node name="MP SPAWN" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.29749, 12.3269)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(948.428, 0, 0, 0, 948.428, 0, 0, 0, 948.428, 0, -1.45888, 0)
+mesh = SubResource("PlaneMesh_1drqi")
+surface_material_override/0 = SubResource("StandardMaterial3D_nabb3")

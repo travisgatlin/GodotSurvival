@@ -8,7 +8,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	if self.visible == true:
+		$PlayerList.clear()
+		for i in mp.playerList.size():
+			$PlayerList.add_item(str(i))
 
 
 func _on_cancel_pressed():
@@ -18,5 +21,10 @@ func _on_cancel_pressed():
 func _on_visibility_changed():
 	if self.visible == true:
 		mp.hostServer(mp.defaultPort)
+		pass
 	else:
 		mp.peer.close()
+
+
+func _on_player_name_pressed():
+	pass # Replace with function body.

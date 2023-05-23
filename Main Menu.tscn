@@ -194,6 +194,7 @@ text = "Waiting for host to start game...."
 
 [connection signal="visibility_changed" from="HostLobby" to="HostLobby" method="_on_visibility_changed"]
 [connection signal="pressed" from="HostLobby/Cancel" to="HostLobby" method="_on_cancel_pressed"]
+[connection signal="pressed" from="HostLobby/PlayerName" to="HostLobby" method="_on_player_name_pressed"]
 [connection signal="item_activated" from="MainMenu/Menu" to="MainMenu/Menu" method="_on_item_activated"]
 [connection signal="pressed" from="PeerLobby/Join" to="PeerLobby" method="_on_join_pressed"]
 [connection signal="pressed" from="PeerLobby/Cancel" to="PeerLobby" method="_on_cancel_pressed"]

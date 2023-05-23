@@ -6,8 +6,11 @@ func _ready():
 	multiplayer.connection_failed.connect(connectionFailed)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _process(_delta):
+		if self.visible == true:
+			$PlayerList.clear()
+			for i in mp.playerList.size():
+				$PlayerList.add_item(str(i))
 
 
 func _on_cancel_pressed():
