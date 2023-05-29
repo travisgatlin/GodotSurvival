@@ -153,7 +153,6 @@ LookDown={
 
 [physics]
 
-3d/run_on_separate_thread=true
 3d/solver/solver_iterations=8
 
 [rendering]

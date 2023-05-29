@@ -20,7 +20,7 @@ func _input(event):
 	if event is InputEventMouseMotion and playerDead == false:
 		rotate(Vector3(0,1,0), event.relative.x * lookSensitivity * lookInverted)
 		self.rotate_object_local(Vector3(1,0,0), event.relative.y * lookSensitivity * lookInverted)
-		get_node("../DummyAnimated").rotation.y = self.rotation.y+1.5708
+		get_node("../DummyAnimated").rotation.y = self.rotation.y
 #	if event is InputEventJoypadMotion:
 #		var rotateRate = 1
 #		var currentDirection = transform.basis
@@ -29,4 +29,3 @@ func _input(event):
 #		print (rotateVector)
 func _on_player_death():
 	playerDead = true
-	get_node("../DummyAnimated/RiggedDummy/Skeleton3D/BoneAttachment3D/Deathcam").make_current()

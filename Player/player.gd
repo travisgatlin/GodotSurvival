@@ -31,8 +31,6 @@ var input_dir = Vector2(0,0)
 
 @export var dead = false
 
-
-
 @export var stamina = {
 	"total": 100.0,
 	"jumping": 15,
@@ -81,7 +79,7 @@ func _ready():
 	playerGlobals.emit_signal("barChange", "health", playerStats["health"])
 	
 	self.set_global_rotation(Vector3(0,0,0))
-	
+
 func _physics_process(delta):
 	input_dir = Input.get_vector("left","right","forward","back")
 	if get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding():
@@ -144,13 +142,12 @@ func _process(_delta):
 	if playerStats["health"] <= 0:
 		_on_death()
 
-
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
 	animation("Death", false, "Death")
 	#get_node("BodyCollision").shape.height = 0.5
 	dead = true
-	
+
 func _crouch():
 	_crouchCheck()
 	if crouching["isCrouching"] == false:
@@ -182,6 +179,7 @@ func _sprint():
 func _walk():
 	animation("Movement", false, "Walk",0)
 	currentRunSpeed = playerStats["walkSpeed"]
+
 func _staminadrain(amount):
 	get_node("StaminaRegen").start(stamina["regenWaitTime"])
 	stamina["total"] = stamina["total"] - amount
@@ -222,7 +220,7 @@ func _getInVehicle(vehicle, state):
 		#get_node("FirstPerson/PlayerView").current = false
 		#get_node("VehicleCamera3D").current = true
 		get_node("BodyCollision2").disabled = true
-		
+
 func _getOutOfVehicle():
 		inVehicle = false
 		playerGlobals.emit_signal("enterVehicle",false, null)
@@ -233,6 +231,7 @@ func _getOutOfVehicle():
 		get_node("VehicleCamera3D").current = false
 		await get_tree().create_timer(0.1).timeout
 		get_node("BodyCollision2").disabled = false
+
 func _selectObject():
 	var collisions = get_node("PlayerView/ItemSelect").get_collision_count()
 	var validSelections = []
@@ -267,6 +266,7 @@ func _fallDamage():
 		lastVelocity=0
 		if calculatedDamage > 0:
 			_incomingDamage(round(calculatedDamage))
+
 func _incomingDamage(amount):
 	incomingDamage = amount
 	playerStats["health"] = playerStats["health"]-amount
@@ -287,6 +287,7 @@ func ladderUp():
 			velocity.y = input_dir.y*-playerStats["climbLadderSpeed"]
 	else: 
 		onLadder = false
+
 func respawnSetup():
 	respawnFlag = true
 	get_node("FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/BoneAttachment3D/Deathcam").clear_current(false)

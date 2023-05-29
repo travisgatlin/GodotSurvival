@@ -1,7 +1,7 @@
 extends Node3D
 @export var player = preload("res://Player/player.tscn")
 @export var UI = preload("res://Player/UIElements/ui.tscn")
-@export var peer = preload("res://Enemies/test_person.tscn")
+@export var peer = preload("res://Enemies/DummyAnimated.glb")
 @onready var playerGlobals = get_node("../PlayerStats")
 @onready var networking = get_node("/root/Networking")
 # Called when the node enters the scene tree for the first time.
