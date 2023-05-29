@@ -13,11 +13,7 @@ func _process(_delta):
 
 func _on_item_activated(index):
 	if index == 0:
-		var level = load("res://overworld.tscn").instantiate()
-		playerGlobals.gameStarted = true
-		get_node("/root").add_child(level)
-		get_node("/root/Control").queue_free()
-		print (playerGlobals.gameStarted)
+		startGame()
 	elif index == 1:
 		pass
 	elif index == 2:
@@ -30,3 +26,10 @@ func _on_item_activated(index):
 		pass
 	elif index == 5:
 		get_tree().quit()
+
+
+func startGame():
+	var level = load("res://overworld.tscn").instantiate()
+	playerGlobals.gameStarted = true
+	get_node("/root").add_child(level)
+	get_node("/root/Control").queue_free()

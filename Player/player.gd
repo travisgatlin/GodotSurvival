@@ -280,7 +280,7 @@ func ladderUp():
 		currentObject=get_node("FirstPerson/DummyAnimated/LadderRay").get_collider(n).get_parent().get_parent()
 		if currentObject.has_meta("Ladder") == true:
 			ladderObjects.append("Ladder")
-	if ladderObjects.has("Ladder") and get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding()==true:
+	if ladderObjects.has("Ladder") and get_node("FirstPerson/DummyAnimated/LadderRay").is_colliding()==true and crouching["isCrouching"] == false:
 		onLadder = true
 		if onLadder == true:
 			animation("Movement", false,"OnLadder")

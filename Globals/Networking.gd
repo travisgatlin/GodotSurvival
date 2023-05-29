@@ -7,8 +7,8 @@ func _ready():
 	multiplayer.peer_connected.connect(playerConnected)
 	multiplayer.peer_disconnected.connect(playerDisconnected)
 func _process(_delta):
-	for i in multiplayer.get_peers().size():
-		print(i)
+	#for i in multiplayer.get_peers().size():
+	pass
 
 
 func hostServer(port):
