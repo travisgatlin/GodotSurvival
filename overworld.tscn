@@ -79,7 +79,7 @@ disable_mode = 1
 mass = 0.2
 
 [node name="SodaCan2" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 2.31913, -0.11203)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 0.585908, -0.11203)
 disable_mode = 1
 mass = 0.2
 

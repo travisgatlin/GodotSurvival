@@ -15,6 +15,8 @@ signal getInVehicle(state, id)
 	"Crouch Side": "parameters/Crouch Side/blend_amount",
 	"Falling": "parameters/Falling/blend_amount",
 	"Ladder": "parameters/Climb/scale",
+	"Hard Landing": "parameters/Hard Landing/request",
+	"Swim": "parameters/SwimBlend/blend_amount",
 }
 
 var inWater = false
@@ -139,6 +141,8 @@ func _process(_delta):
 		moveAnimController("Crouch Front", "Crouch Side", input_dir)
 	elif onLadder == true:
 		moveAnimController("Ladder", null, input_dir)
+	elif inVehicle == true:
+		moveAnimController("Swimming", null, input_dir)
 	if playerStats["health"] <= 0:
 		_on_death()
 
@@ -265,6 +269,7 @@ func _fallDamage():
 		calculatedDamage = lastVelocity*-1*playerStats["fallDamageMultiplier"]
 		lastVelocity=0
 		if calculatedDamage > 0:
+			animation("Hard Landing")
 			_incomingDamage(round(calculatedDamage))
 
 func _incomingDamage(amount):

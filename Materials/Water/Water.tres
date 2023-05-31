@@ -1,0 +1,28 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://c7p63h6lny81g"]
+
+[ext_resource type="Texture2D" uid="uid://bn5iyl5vnjwj7" path="res://Materials/Water/Water_002_COLOR.jpg" id="1_r5q6h"]
+[ext_resource type="Texture2D" uid="uid://cjcju0ouq21yw" path="res://Materials/Water/Water_002_NORM.jpg" id="2_5mja0"]
+[ext_resource type="Texture2D" uid="uid://dthtk40je64wr" path="res://Materials/Water/Water_002_ROUGH.jpg" id="3_80cku"]
+
+[sub_resource type="FogMaterial" id="FogMaterial_fiu5s"]
+albedo = Color(0.152941, 0.152941, 0.152941, 1)
+
+[resource]
+next_pass = SubResource("FogMaterial_fiu5s")
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.34902)
+albedo_texture = ExtResource("1_r5q6h")
+metallic = 1.0
+roughness_texture = ExtResource("3_80cku")
+normal_enabled = true
+normal_texture = ExtResource("2_5mja0")
+clearcoat_enabled = true
+backlight_enabled = true
+refraction_enabled = true
+refraction_scale = 1.0
+refraction_texture = ExtResource("2_5mja0")
+uv1_offset = Vector3(1.68, 0, 0)
+uv1_triplanar = true
+uv1_triplanar_sharpness = 1.03527
+uv1_world_triplanar = true
+uv2_triplanar = true
