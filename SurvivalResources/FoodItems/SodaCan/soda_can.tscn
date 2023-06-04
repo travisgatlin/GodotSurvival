@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cupbpgahfinyf"]
+[gd_scene load_steps=8 format=3 uid="uid://l737u4w57mlj"]
 
-[ext_resource type="Texture2D" uid="uid://cxfjrpup6tmvq" path="res://FoodItems/SodaCan/Soda can_bepis can.png" id="1_ndalj"]
+[ext_resource type="Script" path="res://SurvivalResources/FoodItems/SodaCan/sodacan.gd" id="1_e14ky"]
+[ext_resource type="Texture2D" uid="uid://cxfjrpup6tmvq" path="res://SurvivalResources/FoodItems/SodaCan/Soda can_bepis can.png" id="2_57pb8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eslrj"]
 resource_name = " Aluminum"
@@ -13,7 +14,7 @@ roughness = 0.165354
 resource_name = "label"
 cull_mode = 2
 vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("1_ndalj")
+albedo_texture = ExtResource("2_57pb8")
 metallic = 0.441667
 roughness = 0.716667
 
@@ -76,6 +77,8 @@ height = 0.122
 radius = 0.033
 
 [node name="SodaCan" type="RigidBody3D"]
+continuous_cd = true
+script = ExtResource("1_e14ky")
 
 [node name="GameCan" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.25, 0, -6.87457e-06, 0, 1.25, 0, 6.87457e-06, 0, 1.25, -0.00107595, 0.0608081, -0.000175944)

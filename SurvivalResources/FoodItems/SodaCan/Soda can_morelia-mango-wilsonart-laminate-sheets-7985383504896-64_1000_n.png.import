@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bnnvsctn8q353"
-path.s3tc="res://.godot/imported/Soda can_morelia-mango-wilsonart-laminate-sheets-7985383504896-64_1000_n.png-28860b3985df1b29b07d20a50e262ce2.s3tc.ctex"
+path.s3tc="res://.godot/imported/Soda can_morelia-mango-wilsonart-laminate-sheets-7985383504896-64_1000_n.png-505608576dddbc0eb0f64925476eee4c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ generator_parameters={}
 
 [deps]
 
-source_file="res://FoodItems/SodaCan/Soda can_morelia-mango-wilsonart-laminate-sheets-7985383504896-64_1000_n.png"
-dest_files=["res://.godot/imported/Soda can_morelia-mango-wilsonart-laminate-sheets-7985383504896-64_1000_n.png-28860b3985df1b29b07d20a50e262ce2.s3tc.ctex"]
+source_file="res://SurvivalResources/FoodItems/SodaCan/Soda can_morelia-mango-wilsonart-laminate-sheets-7985383504896-64_1000_n.png"
+dest_files=["res://.godot/imported/Soda can_morelia-mango-wilsonart-laminate-sheets-7985383504896-64_1000_n.png-505608576dddbc0eb0f64925476eee4c.s3tc.ctex"]
 
 [params]
 

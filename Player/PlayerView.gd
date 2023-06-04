@@ -6,8 +6,6 @@ var playerDead = false
 func _ready():
 	playerGlobals.connect("playerDeath",_on_player_death)
 	transform.basis = Basis() 
-	#get_node("ItemSelect").add_exception(self.get_owner().get_node("BodyCollision2"))
-	#get_node("../../LadderRay").add_exception(self.get_owner().get_node("BodyCollision2"))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -17,7 +15,7 @@ func _input(event):
 	#print (self.get_rotation())
 	var lookSensitivity = 0.003
 	var lookInverted = -1
-	if event is InputEventMouseMotion and playerDead == false:
+	if event is InputEventMouseMotion and playerDead == false and playerGlobals.inventoryOpen == false:
 		rotate(Vector3(0,1,0), event.relative.x * lookSensitivity * lookInverted)
 		self.rotate_object_local(Vector3(1,0,0), event.relative.y * lookSensitivity * lookInverted)
 		get_node("../DummyAnimated").rotation.y = self.rotation.y

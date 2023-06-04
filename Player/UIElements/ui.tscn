@@ -27,119 +27,73 @@ msdf_pixel_range = 22
 oversampling = 1.0
 
 [node name="UI" type="Control"]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -2.0
-offset_top = 5.0
-offset_right = -2.0
-offset_bottom = 5.0
+offset_left = -12.0
+offset_top = -3.0
+offset_right = -12.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_2x1jd")
 
-[node name="TabContainer" type="TabContainer" parent="." groups=["Inventory"]]
+[node name="PlayerInventory" type="TabContainer" parent="." groups=["Inventory"]]
+process_mode = 3
 visible = false
+top_level = true
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -348.0
-offset_top = -260.0
-offset_right = 348.0
-offset_bottom = 260.0
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 575.0
+grow_vertical = 2
+
+[node name="Inventory" type="Panel" parent="PlayerInventory" groups=["Inventory"]]
+layout_mode = 2
+
+[node name="Encumberance" type="Label" parent="PlayerInventory/Inventory" groups=["Inventory"]]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -25.0
+offset_bottom = 26.0
+grow_horizontal = 0
+text = "0/100"
+
+[node name="Main" type="VBoxContainer" parent="PlayerInventory/Inventory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Inventory" type="Panel" parent="TabContainer" groups=["Inventory"]]
+[node name="SortTab" type="TabBar" parent="PlayerInventory/Inventory/Main"]
 layout_mode = 2
-metadata/_edit_lock_ = true
+tab_count = 1
+tab_0/title = "All"
 
-[node name="Categories" type="TabContainer" parent="TabContainer/Inventory" groups=["Inventory"]]
-layout_mode = 0
-offset_right = 695.0
-offset_bottom = 490.0
-metadata/_edit_lock_ = true
-
-[node name="All" type="ItemList" parent="TabContainer/Inventory/Categories" groups=["Inventory"]]
+[node name="InvScroll" type="ScrollContainer" parent="PlayerInventory/Inventory/Main"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-allow_rmb_select = true
-auto_height = true
-text_overrun_behavior = 0
-max_columns = 10
-same_column_width = true
-fixed_column_width = 69
-icon_mode = 0
-fixed_icon_size = Vector2i(48, 48)
-metadata/_edit_lock_ = true
+size_flags_vertical = 3
 
-[node name="Food" type="ItemList" parent="TabContainer/Inventory/Categories" groups=["Inventory"]]
-visible = false
+[node name="MainInv" type="GridContainer" parent="PlayerInventory/Inventory/Main/InvScroll"]
+process_mode = 3
+clip_contents = true
 layout_mode = 2
-auto_height = true
-text_overrun_behavior = 0
-max_columns = 10
-fixed_column_width = 84
-icon_mode = 0
-fixed_icon_size = Vector2i(64, 64)
-metadata/_edit_lock_ = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+columns = 8
 
-[node name="Weapons" type="ItemList" parent="TabContainer/Inventory/Categories" groups=["Inventory"]]
-visible = false
-layout_mode = 2
-auto_height = true
-text_overrun_behavior = 0
-max_columns = 10
-fixed_column_width = 84
-icon_mode = 0
-fixed_icon_size = Vector2i(64, 64)
-metadata/_edit_lock_ = true
-
-[node name="Resources" type="ItemList" parent="TabContainer/Inventory/Categories" groups=["Inventory"]]
-visible = false
-layout_mode = 2
-auto_height = true
-text_overrun_behavior = 0
-max_columns = 10
-fixed_column_width = 84
-icon_mode = 0
-fixed_icon_size = Vector2i(64, 64)
-metadata/_edit_lock_ = true
-
-[node name="Clothing" type="ItemList" parent="TabContainer/Inventory/Categories" groups=["Inventory"]]
-visible = false
-layout_mode = 2
-max_columns = 10
-metadata/_edit_lock_ = true
-
-[node name="Junk" type="ItemList" parent="TabContainer/Inventory/Categories" groups=["Inventory"]]
-visible = false
-layout_mode = 2
-auto_height = true
-text_overrun_behavior = 0
-max_columns = 10
-fixed_column_width = 84
-icon_mode = 0
-fixed_icon_size = Vector2i(64, 64)
-metadata/_edit_lock_ = true
-
-[node name="Encumberance" type="Label" parent="TabContainer/Inventory" groups=["Inventory"]]
-layout_mode = 2
-offset_left = 5.0
-offset_top = 462.0
-offset_right = 125.0
-offset_bottom = 488.0
-text = "Encumberance:"
-
-[node name="Stats" type="Panel" parent="TabContainer" groups=["Inventory"]]
+[node name="Stats" type="Panel" parent="PlayerInventory" groups=["Inventory"]]
 visible = false
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="TabContainer/Stats" groups=["Inventory"]]
+[node name="ItemList" type="ItemList" parent="PlayerInventory/Stats" groups=["Inventory"]]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 16.0
@@ -152,7 +106,7 @@ fixed_column_width = 84
 icon_mode = 0
 fixed_icon_size = Vector2i(64, 64)
 
-[node name="TextureRect" type="TextureRect" parent="TabContainer/Stats" groups=["Inventory"]]
+[node name="TextureRect" type="TextureRect" parent="PlayerInventory/Stats" groups=["Inventory"]]
 layout_mode = 0
 offset_left = 28.0
 offset_top = 31.0
@@ -208,29 +162,37 @@ script = ExtResource("11_j6slm")
 
 [node name="Overencumbered" type="Label" parent="." groups=["Inventory"]]
 visible = false
-layout_mode = 0
-offset_left = 402.0
-offset_top = 655.0
-offset_right = 874.0
-offset_bottom = 681.0
+top_level = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -472.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
 text = "You are overencumbered, your walk speed has been reduced"
 
 [node name="PickupPrompt" type="Label" parent="." groups=["Inventory"]]
 visible = false
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.394271
-anchor_top = 0.475463
-anchor_right = 0.605729
-anchor_bottom = 0.524537
-offset_top = 60.0
+anchor_left = 0.5
+anchor_top = 0.584
+anchor_right = 0.5
+anchor_bottom = 0.589
+offset_left = -133.0
+offset_top = -19.432
+offset_right = 133.0
+offset_bottom = 15.328
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 25
 text = "Insert PROMPT Here"
 horizontal_alignment = 1
 uppercase = true
-metadata/_edit_use_anchors_ = true
 
 [node name="Crosshair" type="TextureRect" parent="."]
 layout_mode = 1
@@ -250,6 +212,7 @@ expand_mode = 1
 stretch_mode = 4
 
 [node name="DeathScreen" type="ItemList" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -362,27 +325,35 @@ visible = false
 layout_mode = 2
 
 [node name="QuickBar" type="Panel" parent="." groups=["StatusBar"]]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -252.0
-offset_top = -62.0
-offset_right = 252.0
+offset_left = -256.0
+offset_top = -76.0
+offset_right = 256.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset = Vector2(252, 14.5)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="QuickBar"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -38.0
+offset_right = 256.0
+offset_bottom = 38.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 1
+alignment = 1
 
 [node name="Healthbar" type="TextureProgressBar" parent="QuickBar/VBoxContainer"]
 custom_minimum_size = Vector2(0, 7)
@@ -406,21 +377,20 @@ texture_under = ExtResource("14_13uhb")
 texture_progress = ExtResource("15_3y7sw")
 tint_progress = Color(0, 1, 0, 1)
 
-[node name="Debug" type="RichTextLabel" parent="."]
-visible = false
-layout_mode = 1
-offset_left = 956.0
-offset_top = -7.0
-offset_right = 1153.0
-offset_bottom = 285.0
+[node name="Items" type="GridContainer" parent="QuickBar/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 10
 
-[connection signal="tab_changed" from="TabContainer/Inventory/Categories" to="TabContainer/Inventory/Categories" method="_on_tab_changed"]
-[connection signal="item_activated" from="TabContainer/Inventory/Categories/All" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
-[connection signal="item_activated" from="TabContainer/Inventory/Categories/Food" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
-[connection signal="item_activated" from="TabContainer/Inventory/Categories/Weapons" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
-[connection signal="item_activated" from="TabContainer/Inventory/Categories/Resources" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
-[connection signal="item_activated" from="TabContainer/Inventory/Categories/Clothing" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
-[connection signal="item_activated" from="TabContainer/Inventory/Categories/Junk" to="TabContainer/Inventory/Categories" method="_on_item_activated"]
+[node name="Debug" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -197.0
+offset_bottom = 292.0
+grow_horizontal = 0
+
 [connection signal="pressed" from="Suicide" to="Pause Menu" method="_on_suicide_pressed"]
 [connection signal="gamePause" from="Pause Menu" to="." method="_on_pause_menu_game_pause"]
 [connection signal="item_activated" from="Pause Menu" to="Pause Menu" method="_on_item_activated"]

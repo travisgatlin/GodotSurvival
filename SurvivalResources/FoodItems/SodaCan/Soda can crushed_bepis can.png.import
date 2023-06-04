@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxfjrpup6tmvq"
-path.s3tc="res://.godot/imported/Soda can_bepis can.png-34bf68e3d503bca2be834f5e4d2c00cc.s3tc.ctex"
+uid="uid://brsgfn8s2qdb1"
+path.s3tc="res://.godot/imported/Soda can crushed_bepis can.png-dd1585f24205e87f9ed7ffbfd4df1bfe.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ generator_parameters={}
 
 [deps]
 
-source_file="res://FoodItems/SodaCan/Soda can_bepis can.png"
-dest_files=["res://.godot/imported/Soda can_bepis can.png-34bf68e3d503bca2be834f5e4d2c00cc.s3tc.ctex"]
+source_file="res://SurvivalResources/FoodItems/SodaCan/Soda can crushed_bepis can.png"
+dest_files=["res://.godot/imported/Soda can crushed_bepis can.png-dd1585f24205e87f9ed7ffbfd4df1bfe.s3tc.ctex"]
 
 [params]
 

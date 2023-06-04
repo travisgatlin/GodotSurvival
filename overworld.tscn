@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://5ckxgrc4d83q"]
+[gd_scene load_steps=9 format=3 uid="uid://bfdjmvn68vckh"]
 
 [ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
-[ext_resource type="PackedScene" uid="uid://cupbpgahfinyf" path="res://FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
+[ext_resource type="PackedScene" uid="uid://cmigrniyjx2d6" path="res://SurvivalResources/FoodItems/2liter/2_liter.tscn" id="3_oqhjp"]
+[ext_resource type="PackedScene" uid="uid://l737u4w57mlj" path="res://SurvivalResources/FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
 [ext_resource type="PackedScene" uid="uid://c1n1w1314sa2n" path="res://MiscItems/test_ladder.tscn" id="8_ccw4p"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ge4ds"]
@@ -74,17 +75,23 @@ shape = SubResource("BoxShape3D_0cwlw")
 [node name="Items" type="Node3D" parent="."]
 
 [node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 0.450023, -0.261706)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58187, 1.5334, 0.604798)
 disable_mode = 1
 mass = 0.2
 
 [node name="SodaCan2" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.07423, 0.585908, -0.11203)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55744, 1.52815, 0.885211)
 disable_mode = 1
 mass = 0.2
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath("..")
+[node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, 0.0463669)
+
+[node name="2 Liter2" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -0.473319)
+
+[node name="2 Liter3" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -1.28176)
 
 [node name="TestLadder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
@@ -100,3 +107,27 @@ metadata/Spawn = true
 
 [node name="MP SPAWN" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.29749, 12.3269)
+
+[node name="Table" type="CSGBox3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.732265, 1.38291, 0)
+use_collision = true
+size = Vector3(1.14754, 0.0480732, 2.45833)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.451659, -0.255441, -0.983808)
+size = Vector3(0.085987, 0.495736, 0.0992744)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.442879, -0.255441, -0.983808)
+size = Vector3(0.085987, 0.495736, 0.0992744)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.451659, -0.255441, 1.1455)
+size = Vector3(0.085987, 0.495736, 0.0992744)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.442879, -0.255441, 1.1455)
+size = Vector3(0.085987, 0.495736, 0.0992744)
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")

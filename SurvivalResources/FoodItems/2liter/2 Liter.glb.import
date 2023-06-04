@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b6w3rsfepopwa"
-path="res://.godot/imported/2 Liter.glb-2a79479962fb04e8e17cd2b1640f3dee.scn"
+path="res://.godot/imported/2 Liter.glb-15876ef80748d70e00f5524b41aa44b8.scn"
 
 [deps]
 
-source_file="res://FoodItems/2liter/2 Liter.glb"
-dest_files=["res://.godot/imported/2 Liter.glb-2a79479962fb04e8e17cd2b1640f3dee.scn"]
+source_file="res://SurvivalResources/FoodItems/2liter/2 Liter.glb"
+dest_files=["res://.godot/imported/2 Liter.glb-15876ef80748d70e00f5524b41aa44b8.scn"]
 
 [params]
 

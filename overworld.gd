@@ -26,7 +26,6 @@ func _on_ui_respawn_player():
 		add_child(playerSpawned)
 		add_child(uiSpawn)
 
-
 func _remotePlayerConnect():
 	#var newPeer = peer.instantiate()
 	print ("player connected!")

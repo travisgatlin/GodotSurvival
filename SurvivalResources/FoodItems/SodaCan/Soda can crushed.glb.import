@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://wqdstapj88y8"
-path="res://.godot/imported/Soda can crushed.glb-235c0f308e78c2cb6bb3f475b668c45b.scn"
+path="res://.godot/imported/Soda can crushed.glb-8a53636755e5636dcbbba0c7c73651d1.scn"
 
 [deps]
 
-source_file="res://FoodItems/SodaCan/Soda can crushed.glb"
-dest_files=["res://.godot/imported/Soda can crushed.glb-235c0f308e78c2cb6bb3f475b668c45b.scn"]
+source_file="res://SurvivalResources/FoodItems/SodaCan/Soda can crushed.glb"
+dest_files=["res://.godot/imported/Soda can crushed.glb-8a53636755e5636dcbbba0c7c73651d1.scn"]
 
 [params]
 

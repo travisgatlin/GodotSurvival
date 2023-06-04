@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://bri7bg6gqcos6"]
+
+[ext_resource type="Script" path="res://Player/UIElements/Inventory Item.gd" id="1_f276l"]
+
+[node name="Item" type="TextureButton"]
+custom_minimum_size = Vector2(60, 60)
+ignore_texture_size = true
+stretch_mode = 4
+script = ExtResource("1_f276l")
+
+[node name="Amount" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 46.0
+offset_top = 44.0
+offset_right = 67.0
+offset_bottom = 70.0

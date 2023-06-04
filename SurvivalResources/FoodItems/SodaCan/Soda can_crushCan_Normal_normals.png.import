@@ -2,17 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rtq8mux7qds4"
-path.s3tc="res://.godot/imported/2 Liter_conka cola.png-d76bed34bc3010c11a23404cbf083fd6.s3tc.ctex"
+uid="uid://fyryjmvyk8dx"
+path.s3tc="res://.godot/imported/Soda can_crushCan_Normal_normals.png-133dea923f47ac62fb262f586e47565c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={}
 
 [deps]
 
-source_file="res://FoodItems/2liter/2 Liter_conka cola.png"
-dest_files=["res://.godot/imported/2 Liter_conka cola.png-d76bed34bc3010c11a23404cbf083fd6.s3tc.ctex"]
+source_file="res://SurvivalResources/FoodItems/SodaCan/Soda can_crushCan_Normal_normals.png"
+dest_files=["res://.godot/imported/Soda can_crushCan_Normal_normals.png-133dea923f47ac62fb262f586e47565c.s3tc.ctex"]
 
 [params]
 
@@ -20,12 +21,12 @@ compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=1
+roughness/src_normal="res://FoodItems/SodaCan/Soda can_crushCan_Normal_normals.png"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

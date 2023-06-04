@@ -29,6 +29,7 @@ var onLadder = false
 var respawnFlag = false
 var initialSpawn = true
 var input_dir = Vector2(0,0)
+
 @export var inventory = []
 
 @export var dead = false
@@ -68,6 +69,7 @@ var currentRunSpeed = 5.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
+	$"FirstPerson/PlayerView/ItemSelect".add_exception(self)
 	animation("Movement", false , "Walk",0)
 	if respawnFlag == true or initialSpawn == true:
 		
@@ -113,8 +115,6 @@ func _physics_process(delta):
 			elif crouching["isCrouching"] == false and onLadder == false:
 				_walk()
 			
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 			var direction = (get_node("FirstPerson/PlayerView").transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 			
 			if direction and onLadder == false:
@@ -123,18 +123,14 @@ func _physics_process(delta):
 			else:
 				velocity.x = move_toward(velocity.x, 0, currentRunSpeed)
 				velocity.z = move_toward(velocity.z, 0, currentRunSpeed)
-			playerGlobals.emit_signal("debug", str(input_dir))
-		
-		if Input.is_action_just_pressed("action"):
-			if _vehicleSelect() != null and inVehicle == false:
-				_getInVehicle(_vehicleSelect(), true)
-		
+			playerGlobals.emit_signal("debug", str(inventory))
+		if Input.is_action_just_pressed("test"):
+			dropObject(0)
 		if Input.is_action_just_pressed("leaveVehicle") and inVehicle == true:
 			_getOutOfVehicle()
 		move_and_slide()
 
 func _process(_delta):
-	#print(mainTree.get(animationBlends["Ladder"]))
 	if crouching["isCrouching"] == false and onLadder == false:
 		moveAnimController("Front","Side", input_dir)
 	elif crouching["isCrouching"] == true:
@@ -145,6 +141,14 @@ func _process(_delta):
 		moveAnimController("Swimming", null, input_dir)
 	if playerStats["health"] <= 0:
 		_on_death()
+	
+	if Input.is_action_just_pressed("action") and dead == false and inVehicle == false:
+		if _vehicleSelect() != null and inVehicle == false:
+			_getInVehicle(_vehicleSelect(), true)
+		if $"FirstPerson/PlayerView/ItemSelect".is_colliding() == true:
+			pickupObject()
+	
+	encumberanceAdd()
 
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
@@ -236,21 +240,9 @@ func _getOutOfVehicle():
 		await get_tree().create_timer(0.1).timeout
 		get_node("BodyCollision2").disabled = false
 
-func _selectObject():
-	var collisions = get_node("PlayerView/ItemSelect").get_collision_count()
-	var validSelections = []
-	validSelections = []
-	if get_node("FirstPerson/PlayerView/ItemSelect").is_colliding():
-		for i in collisions:
-			if get_node("FirstPerson/PlayerView/ItemSelect").get_collider(i).get_parent() != get_node("../StaticLevel"):
-				var object = get_node("FirstPerson/PlayerView/ItemSelect").get_collider(i)
-				if object.get_parent() == get_node("../Items"):
-					validSelections.append(object)
-				return validSelections
-
 func _vehicleSelect():
-	if get_node("FirstPerson/PlayerView/ItemSelect/VehicleCheck").is_colliding():
-		var vehicle = get_node("FirstPerson/PlayerView/ItemSelect/VehicleCheck").get_collider()
+	if $"FirstPerson/PlayerView/ItemSelect/VehicleCheck".is_colliding():
+		var vehicle = $"FirstPerson/PlayerView/ItemSelect/VehicleCheck".get_collider()
 		if vehicle.get("vehicleStats"):
 			return vehicle
 		else:
@@ -312,3 +304,35 @@ func moveAnimController(moveset1,moveset2,vector2):
 		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset1], vector2.y, 0.1)
 	if moveset2 != null:
 		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
+
+func pickupObject():
+	var objects = $"FirstPerson/PlayerView/ItemSelect".get_collision_count()
+	var selectedObject = null
+	if objects != null:
+		for i in objects:
+			var itemParent = str($"FirstPerson/PlayerView/ItemSelect".get_collider(i).get_parent())
+			if "Items" in itemParent:
+				selectedObject = $"FirstPerson/PlayerView/ItemSelect".get_collider(i)
+				playerGlobals.emit_signal("itemPickedUp", selectedObject)
+				var objParent = selectedObject.get_parent()
+				inventory.append(selectedObject)
+				objParent.remove_child(selectedObject)
+				return selectedObject
+
+func dropObject(index):
+	if range(inventory.size()).has(index):
+		var droppedObject = inventory[index]
+		$"/root/Overworld/Items".add_child(inventory[index])
+		droppedObject.set_rotation_degrees(Vector3(0,0,0))
+		droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
+		if droppedObject is RigidBody3D:
+			droppedObject.set_angular_velocity(Vector3(0,0,0))
+			droppedObject.set_axis_velocity(self.velocity)
+		playerGlobals.emit_signal("itemDropped",droppedObject)
+		inventory.remove_at(index)
+
+func encumberanceAdd():
+	var weight = 0
+	for i in inventory.size():
+		weight += inventory[i].itemProps["Weight"]
+	playerStats["equipWeight"] = weight

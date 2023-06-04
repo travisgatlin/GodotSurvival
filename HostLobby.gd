@@ -7,7 +7,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if self.visible == true:
 		$PlayerList.clear()
 		for i in mp.playerList.size():
