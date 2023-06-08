@@ -1,5 +1,6 @@
 extends TextureButton
 var stack = 0
+@onready var playerGlobals = $"/root/PlayerStats"
 @export var itemStats = {
 }
 @export var itemProps = {
@@ -45,3 +46,10 @@ func stackRemove():
 	$"Amount".text = "(" + str(stack) + ")"
 	if stack < 1:
 		self.queue_free()
+
+func equip():
+	pass
+
+func _on_pressed():
+	if Input.is_action_pressed("sprint"):
+		playerGlobals.emit_signal("dropItem", itemStats["id"], true)

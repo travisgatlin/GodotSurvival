@@ -48,10 +48,10 @@ metadata/Ladder = false
 mesh = SubResource("ArrayMesh_qe54q")
 skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Cube"]
+[node name="Ladder" type="StaticBody3D" parent="Cube"]
 collision_mask = 9
 constant_angular_velocity = Vector3(0.0700052, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube/Ladder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26439, 0)
 shape = SubResource("BoxShape3D_q84xi")

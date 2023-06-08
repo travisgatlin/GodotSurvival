@@ -14,6 +14,7 @@ signal debug (string)
 signal initialSpawn()
 signal itemPickedUp(object)
 signal itemDropped(object)
+signal dropItem(index, idFlag)
 func _ready():
 	pass
 func _process(delta):

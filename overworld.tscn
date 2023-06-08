@@ -75,29 +75,18 @@ shape = SubResource("BoxShape3D_0cwlw")
 [node name="Items" type="Node3D" parent="."]
 
 [node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58187, 1.5334, 0.604798)
-disable_mode = 1
-mass = 0.2
-
-[node name="SodaCan2" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55744, 1.52815, 0.885211)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58187, 1.5334, -1.41523)
 disable_mode = 1
 mass = 0.2
 
 [node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, 0.0463669)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -1.76938)
 
-[node name="2 Liter2" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -0.473319)
-
-[node name="2 Liter3" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -1.28176)
-
-[node name="TestLadder" parent="." instance=ExtResource("8_ccw4p")]
+[node name="Ladder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
 metadata/Ladder = true
 
-[node name="TestLadder2" parent="." instance=ExtResource("8_ccw4p")]
+[node name="Ladder2" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(0.973175, 0, 0.230067, 0, 1, 0, -0.230067, 0, 0.973175, -4.49721, 0.671872, -0.22945)
 metadata/Ladder = true
 
