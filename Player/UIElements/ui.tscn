@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://8utpemkphlv3"]
+[gd_scene load_steps=20 format=3 uid="uid://8utpemkphlv3"]
 
 [ext_resource type="Script" path="res://Player/UIElements/UI.gd" id="2_2x1jd"]
+[ext_resource type="Script" path="res://Player/UIElements/InvList.gd" id="2_3yggj"]
 [ext_resource type="Texture2D" uid="uid://bbjokg8hdj8w2" path="res://UIIcons/PauseMenu/Skull Icon.png" id="10_vele3"]
 [ext_resource type="Texture2D" uid="uid://clp0owhq7d8w5" path="res://UIIcons/PauseMenu/pause.png" id="11_052gq"]
 [ext_resource type="Script" path="res://Player/UIElements/Pause Menu.gd" id="11_j6slm"]
@@ -14,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://c5lqlbhvlioj8" path="res://UIIcons/PauseMenu/save.png" id="14_jsr20"]
 [ext_resource type="Texture2D" uid="uid://bcb4c3v28i84y" path="res://UIIcons/GameplayElements/HealthBar.png" id="15_3y7sw"]
 [ext_resource type="Texture2D" uid="uid://bky7dwx3dfrsv" path="res://UIIcons/PauseMenu/Exit.png" id="15_he56w"]
+[ext_resource type="Script" path="res://Player/UIElements/Quickbar.gd" id="17_mvye0"]
 [ext_resource type="Texture2D" uid="uid://dysaohiiuvsj5" path="res://UIIcons/GameplayElements/crosshair.png" id="18_av6hk"]
 
 [sub_resource type="CameraTexture" id="CameraTexture_8oo08"]
@@ -45,9 +47,12 @@ process_mode = 3
 visible = false
 top_level = true
 layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 575.0
+anchors_preset = -1
+anchor_left = 0.125
+anchor_top = 0.05
+anchor_right = 0.825
+anchor_bottom = 0.875
+grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Inventory" type="Panel" parent="PlayerInventory" groups=["Inventory"]]
@@ -88,6 +93,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 columns = 8
+script = ExtResource("2_3yggj")
 
 [node name="Stats" type="Panel" parent="PlayerInventory" groups=["Inventory"]]
 visible = false
@@ -127,7 +133,9 @@ ignore_texture_size = true
 stretch_mode = 0
 
 [node name="Pause Menu" type="ItemList" parent="."]
+process_mode = 3
 visible = false
+top_level = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -381,6 +389,7 @@ tint_progress = Color(0, 1, 0, 1)
 layout_mode = 2
 size_flags_vertical = 3
 columns = 10
+script = ExtResource("17_mvye0")
 
 [node name="Debug" type="RichTextLabel" parent="."]
 layout_mode = 1

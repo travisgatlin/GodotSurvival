@@ -16,7 +16,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	highlight()
 
 
 func propFormatter(prop):
@@ -41,6 +41,7 @@ func stackAdd():
 		$"Amount".text = "(" + str(stack) + ")"
 	else:
 		$"Amount".visible = false
+
 func stackRemove():
 	stack -= 1
 	$"Amount".text = "(" + str(stack) + ")"
@@ -52,4 +53,19 @@ func equip():
 
 func _on_pressed():
 	if Input.is_action_pressed("sprint"):
-		playerGlobals.emit_signal("dropItem", itemStats["id"], true)
+		playerGlobals.emit_signal("dropItem", itemStats["id"],self.get_parent(), true)
+
+func highlight():
+	if is_hovered():
+		self.grab_focus()
+	else:
+		self.release_focus()
+
+func _get_drag_data(at_position):
+	var icon = load(itemStats["InvIcon"])
+	var invItem = TextureRect.new()
+	invItem.set("expand_mode", 1)
+	invItem.size = self.size
+	invItem.texture = icon
+	set_drag_preview(invItem)
+	return self

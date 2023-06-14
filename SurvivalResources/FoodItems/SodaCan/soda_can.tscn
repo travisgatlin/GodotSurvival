@@ -82,6 +82,7 @@ script = ExtResource("1_e14ky")
 
 [node name="GameCan" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.25, 0, -6.87457e-06, 0, 1.25, 0, 6.87457e-06, 0, 1.25, -0.00107595, 0.0608081, -0.000175944)
+gi_mode = 2
 mesh = SubResource("ArrayMesh_dxvws")
 skeleton = NodePath("")
 

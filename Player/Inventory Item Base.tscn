@@ -5,6 +5,7 @@
 
 [node name="Item" type="TextureButton"]
 custom_minimum_size = Vector2(60, 60)
+mouse_default_cursor_shape = 2
 texture_focused = ExtResource("1_3pf8n")
 ignore_texture_size = true
 stretch_mode = 4

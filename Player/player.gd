@@ -18,7 +18,8 @@ signal getInVehicle(state, id)
 	"Hard Landing": "parameters/Hard Landing/request",
 	"Swim": "parameters/SwimBlend/blend_amount",
 }
-
+@onready var currentPosition = $BodyCollision2.position
+@onready var cameraPosition = $"FirstPerson/PlayerView".position
 var inWater = false
 var inVehicle = false
 var currentVehicle = null
@@ -29,6 +30,7 @@ var onLadder = false
 var respawnFlag = false
 var initialSpawn = true
 var input_dir = Vector2(0,0)
+var equipped = typeof(RigidBody3D)
 
 @export var inventory = []
 
@@ -58,12 +60,12 @@ var input_dir = Vector2(0,0)
 	"fallDamageMultiplier":3,
 	"minimumFallDamageTime":1.5,
 	"climbLadderSpeed": 2.0,
+	"maxStairHeight": 1.0,
 }
 @export var crouching = {
 	"isCrouching":false,
 	"height":1.0,
 	"walkSpeed": 1.5,
-	"crouchCheck": false
 }
 var currentRunSpeed = 5.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -157,25 +159,21 @@ func _on_death():
 	dead = true
 
 func _crouch():
-	_crouchCheck()
-	if crouching["isCrouching"] == false:
-		crouching["isCrouching"] = true
-	elif crouching["crouchCheck"] == false:
-		crouching["isCrouching"] = false
+	if _crouchCheck() == false or crouching["isCrouching"] == false:
+		crouching["isCrouching"] = !crouching["isCrouching"]
 		
 	if crouching["isCrouching"] == true:
 		animation("Movement", false, "Crouch")
 		var crouchPosition = playerStats["height"] - crouching["height"]
-		get_node("BodyCollision2").shape.height = crouching["height"]
-		get_node("FirstPerson/DummyAnimated").position.y = crouchPosition
+		$"BodyCollision2".shape.height = crouching["height"]
+		$"FirstPerson/DummyAnimated".position.y = crouchPosition
 		currentRunSpeed = crouching["walkSpeed"]
 	else:
-		get_node("BodyCollision2").shape.height = playerStats["height"]
-		get_node("FirstPerson/DummyAnimated").position.y = 0
+		$"BodyCollision2".shape.height = playerStats["height"]
+		$"FirstPerson/DummyAnimated".position.y = 0
 
 func _crouchCheck():
-	
-	crouching["crouchCheck"] = get_node("CrouchCheck").is_colliding()
+	return $"CrouchCheck".is_colliding()
 
 func _sprint():
 	if crouching["isCrouching"] == false and stamina["total"] > 0:
@@ -206,7 +204,7 @@ func _jump():
 		self.velocity = Vector3($"FirstPerson/PlayerView".transform.basis * Vector3(0, 0,1).normalized()*15)
 	if is_on_floor() and stamina["total"] > stamina["jumping"]:
 		_crouchCheck()
-		if crouching["crouchCheck"] == false or crouching["isCrouching"] == false:
+		if _crouchCheck() == false or crouching["isCrouching"] == false:
 			if onLadder == false:
 				animation("Jump")
 				velocity.y = playerStats["jumpHeight"]
@@ -245,7 +243,7 @@ func _vehicleSelect():
 
 func _fallDamage():
 	if not is_on_floor():
-		if onLadder == false and crouching["isCrouching"] == false:
+		if onLadder == false and crouching["isCrouching"] == false and !$"FallCheck".is_colliding():
 			animation("Falling", false, str(false), 1)
 		elif onLadder == true:
 			animation("Falling", false, str(false), 0)
@@ -268,12 +266,12 @@ func _incomingDamage(amount):
 func ladderCheck():
 	var headRay = $"FirstPerson/DummyAnimated/LadderRayHead".get_collider()
 	var feetRay = $"FirstPerson/DummyAnimated/LadderRayFeet".get_collider()
-	print (headRay, feetRay)
-	if headRay != null or feetRay != null:
-		if "Ladder" in headRay.name or "Ladder" in feetRay.name:
+	if headRay != null:
+		if "Ladder" in headRay.name:
 			return true
-		else:
-			return false
+	if feetRay != null:
+		if "Ladder" in feetRay.name:
+			return true
 	if headRay == null and feetRay == null:
 		return false
 
@@ -320,8 +318,7 @@ func pickupObject():
 				objParent.remove_child(selectedObject)
 				return selectedObject
 
-func dropObject(index, idFlag:=false):
-	print (findInventoryIndexFromID(index), idFlag)
+func dropObject(index,grid,idFlag:=false):
 	var object = null
 	if idFlag == true:
 		object = findInventoryIndexFromID(index)
@@ -336,7 +333,7 @@ func dropObject(index, idFlag:=false):
 			droppedObject.freeze = false
 			droppedObject.set_angular_velocity(Vector3(0,0,0))
 			droppedObject.set_axis_velocity(self.velocity)
-		playerGlobals.emit_signal("itemDropped",droppedObject)
+		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
 		inventory.remove_at(object)
 
 func encumberanceAdd():
@@ -350,3 +347,8 @@ func findInventoryIndexFromID(id):
 		var invEntry = inventory[i]
 		if invEntry.itemStats["id"] == id:
 			return i
+
+#func climbStairs():
+#	print (str($"FirstPerson/DummyAnimated/LadderRayFeet".is_colliding())+ " " + str($"FirstPerson/DummyAnimated/StairCheck".is_colliding()))
+#	if $"FirstPerson/DummyAnimated/LadderRayFeet".is_colliding() and !$"FirstPerson/DummyAnimated/StairCheck".is_colliding() and onLadder == false:
+#		self.translate(Vector3(0,0.3,0))

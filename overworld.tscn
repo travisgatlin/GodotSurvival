@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfdjmvn68vckh"]
+[gd_scene load_steps=11 format=3 uid="uid://bfdjmvn68vckh"]
 
 [ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
 [ext_resource type="PackedScene" uid="uid://cmigrniyjx2d6" path="res://SurvivalResources/FoodItems/2liter/2_liter.tscn" id="3_oqhjp"]
+[ext_resource type="PackedScene" uid="uid://bmir2b0ethhoa" path="res://TestLevel/test_building.tscn" id="5_s3flu"]
 [ext_resource type="PackedScene" uid="uid://l737u4w57mlj" path="res://SurvivalResources/FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
+[ext_resource type="PackedScene" uid="uid://bj0ksqia05yik" path="res://Tools/flashlight.tscn" id="6_feg5v"]
 [ext_resource type="PackedScene" uid="uid://c1n1w1314sa2n" path="res://MiscItems/test_ladder.tscn" id="8_ccw4p"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ge4ds"]
@@ -42,6 +44,10 @@ size = Vector3(8.65098, 1, 10.7764)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform/StaticBody3D"]
 shape = SubResource("BoxShape3D_0cwlw")
 
+[node name="GPUParticlesCollisionBox3D2" type="GPUParticlesCollisionBox3D" parent="StaticLevel/Platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0693243, -0.153354, 0)
+size = Vector3(8.62279, 2, 9.99288)
+
 [node name="Platform6" type="CSGBox3D" parent="StaticLevel"]
 transform = Transform3D(0.996267, -0.0863211, 0, 0.0863211, 0.996267, 0, 0, 0, 1, -9.15834, -15.2979, 0.0154278)
 use_collision = true
@@ -72,6 +78,9 @@ size = Vector3(8.65098, 1, 10.7764)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticLevel/Platform2/StaticBody3D"]
 shape = SubResource("BoxShape3D_0cwlw")
 
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="StaticLevel/Platform2"]
+size = Vector3(9.89102, 2, 10.8809)
+
 [node name="Items" type="Node3D" parent="."]
 
 [node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
@@ -81,6 +90,9 @@ mass = 0.2
 
 [node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -1.76938)
+
+[node name="Flashlight" parent="Items" instance=ExtResource("6_feg5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61907, 1.50708, -0.858617)
 
 [node name="Ladder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
@@ -120,3 +132,6 @@ size = Vector3(0.085987, 0.495736, 0.0992744)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
+
+[node name="TestBuilding" parent="." instance=ExtResource("5_s3flu")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.88783, 0.375025, 5.39247)

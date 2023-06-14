@@ -13,8 +13,8 @@ signal enterVehicle(state, id)
 signal debug (string)
 signal initialSpawn()
 signal itemPickedUp(object)
-signal itemDropped(object)
-signal dropItem(index, idFlag)
+signal itemDropped(object,grid)
+signal dropItem(index,grid, idFlag)
 func _ready():
 	pass
 func _process(delta):

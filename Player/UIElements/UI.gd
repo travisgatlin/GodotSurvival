@@ -1,15 +1,16 @@
 extends Control
 var UI = true
-var captureMouse = true
 var inventory = false
 var initialInventoryGen = false
+var mouseVisible = false
 var gamePaused = false
 var playerDeath = false
 var inventoryUpdate = false
 var entry = preload("res://Player/Inventory Item Base.tscn")
-@onready var network = get_node("/root/Networking")
-@onready var playerGlobals = get_node("/root/PlayerStats")
+@onready var network = $"/root/Networking"
+@onready var playerGlobals = $"/root/PlayerStats"
 @onready var inventoryGrid = $"PlayerInventory/Inventory/Main/InvScroll/MainInv"
+@onready var hotbar = $"QuickBar/VBoxContainer/Items"
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	initialInventoryGen = false
@@ -25,20 +26,29 @@ func _process(_delta):
 	if Input.is_action_just_pressed("Inventory"):
 		generateInventory()
 		openInventory()
-	
-	if captureMouse == true:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	elif captureMouse == false: 
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if mouseVisible == true:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	if playerDeath == true:
-		get_node("DeathScreen").visible = true
-		get_node("Label").visible = true
+		$"DeathScreen".visible = true
+		$"Label".visible = true
 	else:
-		get_node("DeathScreen").visible = false
-		get_node("Label").visible = false
+		$"DeathScreen".visible = false
+		$"Label".visible = false
 func _on_pause_menu_game_pause():
-	gamePaused = true
+	gamePaused = !gamePaused
+	if gamePaused == true:
+		mouseVisible = true
+		$"Pause Menu".visible = true
+		$"Suicide".visible = true
+		get_tree().paused = true
+	if gamePaused == false:
+		mouseVisible = false
+		$"Pause Menu".visible = false
+		$"Suicide".visible = false
+		get_tree().paused = false
 
 
 
@@ -50,22 +60,22 @@ func _on_player_bar_change(key, value):
 
 
 func _on_player_death():
+	mouseVisible = true
 	playerDeath = true
-	captureMouse = false
 
 func _debugbox(string):
-	get_node("Debug").text = string
+	$"Debug".text = string
 
 func openInventory():
 	inventory = !inventory
 	if inventory == true:
-		captureMouse = false
 		$"Crosshair".visible = false
 		$"PlayerInventory".visible = true
+		mouseVisible = true
 		playerGlobals.inventoryOpen = true
 	else:
-		captureMouse = true
 		$"Crosshair".visible = true
+		mouseVisible = false
 		$"PlayerInventory".visible = false
 		playerGlobals.inventoryOpen = false
 
@@ -116,9 +126,9 @@ func objectStackExists(array,id):
 			return inventoryEntries[i]
 	return null
 	
-func removeFromInventory(object):
+func removeFromInventory(object,grid):
 	var player = playerGlobals.playerName
-	var inventoryEntries = inventoryGrid.get_children()
+	var inventoryEntries = grid.get_children()
 	for i in inventoryEntries.size():
 		if inventoryEntries[i].itemStats["id"] == object.itemStats["id"]:
 			inventoryEntries[i].stackRemove()
