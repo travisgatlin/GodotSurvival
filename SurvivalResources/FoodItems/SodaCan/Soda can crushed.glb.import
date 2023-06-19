@@ -29,6 +29,6 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 import_script/path=""
 _subresources={}
-subdivision/import_as="SubdivMeshInstance3D"
+subdivision/import_as="BakedSubdivMesh (bake at runtime)"
 subdivision/subdivision_level=0
 gltf/embedded_image_handling=1

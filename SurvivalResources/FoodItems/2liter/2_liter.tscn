@@ -25,6 +25,8 @@ albedo_texture = ExtResource("1_nyl8h")
 roughness = 0.351064
 normal_enabled = true
 normal_texture = ExtResource("2_fhsgm")
+rim_tint = 0.0
+grow_amount = 1.291
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3cb6d"]
 resource_name = "Lid"
@@ -114,6 +116,7 @@ height = 0.570228
 radius = 0.100265
 
 [node name="2 Liter" type="RigidBody3D"]
+continuous_cd = true
 script = ExtResource("1_qyvhf")
 
 [node name="2Liter" type="MeshInstance3D" parent="."]

@@ -15,6 +15,9 @@ signal initialSpawn()
 signal itemPickedUp(object)
 signal itemDropped(object,grid)
 signal dropItem(index,grid, idFlag)
+signal equipItem(objectID)
+signal itemUsed(object)
+signal invUpdate(oldId,newObject)
 func _ready():
 	pass
 func _process(delta):

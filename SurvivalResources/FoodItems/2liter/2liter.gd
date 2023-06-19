@@ -14,3 +14,7 @@ extends RigidBody3D
 	"Scraps into" : "Plastic",
 	"Amount" : 15.0
 	}
+
+
+func USE():
+	pass

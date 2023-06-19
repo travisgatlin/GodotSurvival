@@ -1,4 +1,5 @@
 extends RigidBody3D
+var crushed = false
 @export var itemStats = {
 	"ItemName" : "Soda Can",
 	"ItemType" : "Drink",
@@ -14,3 +15,17 @@ extends RigidBody3D
 	"Scraps into" : "Aluminum",
 	"Amount" : 8.0
 	}
+
+func USE():
+	crush()
+	
+func crush():
+	if crushed == false:
+		crushed = true
+		var oldId = itemStats["id"]
+		itemStats["InvIcon"] = "res://InventoryIcons/SodaCanCrushedIcon.png"
+		itemStats["id"] = 644857
+		self.freeze = true
+		$"GameCan".visible = false
+		$"CanCrushedlow".visible = true
+		$"/root/PlayerStats".emit_signal("invUpdate", oldId, self)

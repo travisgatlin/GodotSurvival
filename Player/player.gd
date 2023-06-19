@@ -1,7 +1,7 @@
 extends CharacterBody3D
 signal getInVehicle(state, id)
-@onready var globals = get_node("/root/Config")
-@onready var playerGlobals = get_node("/root/PlayerStats")
+@onready var globals = $"/root/Config"
+@onready var playerGlobals = $"/root/PlayerStats"
 #@onready var state_machine = get_node("FirstPerson/MainTree")["parameters/playback"]
 @onready var mainTree = $"FirstPerson/MainTree"
 @onready var animationBlends = {
@@ -30,7 +30,7 @@ var onLadder = false
 var respawnFlag = false
 var initialSpawn = true
 var input_dir = Vector2(0,0)
-var equipped = typeof(RigidBody3D)
+var equipped = null
 
 @export var inventory = []
 
@@ -85,6 +85,7 @@ func _ready():
 	playerGlobals.emit_signal("barChange", "health", playerStats["health"])
 	
 	playerGlobals.connect("dropItem",dropObject)
+	playerGlobals.connect("equipItem", _objectEquip)
 	self.set_global_rotation(Vector3(0,0,0))
 
 func _physics_process(delta):
@@ -118,7 +119,9 @@ func _physics_process(delta):
 		move_and_slide()
 
 func _process(_delta):
+	
 	onLadder = ladderCheck()
+	
 	climbLadder()
 	if inVehicle==true and currentVehicle != null:
 		get_node(".").global_transform.origin = currentVehicle.get_global_position()
@@ -150,8 +153,34 @@ func _process(_delta):
 		if $"FirstPerson/PlayerView/ItemSelect".is_colliding() == true:
 			pickupObject()
 	
+	if Input.is_action_just_pressed("Attack") and equipped != null:
+		useEquipped()
 	encumberanceAdd()
+func _objectEquip(objectID):
+	if equipped != null:
+		_unequip()
+	var object = null
+	var equipPosition = $"FirstPerson/PlayerView/EquipPosition"
+	for i in inventory.size():
+		if inventory[i].itemStats["id"] == objectID:
+			object = inventory[i]
+			equipped = object
+			break
+	for i in object.get_child_count():
+		var objects = object.get_children()
+		if objects[i] is CollisionShape3D:
+			objects[i].disabled = true
+	object.set_rotation_degrees(Vector3(0,0,0))
+	$"FirstPerson/PlayerView/EquipPosition".add_child(object)
+	object.set_global_position(equipPosition.get_global_position())
 
+func _unequip():
+	for i in equipped.get_child_count():
+		var objects = equipped.get_children()
+		if objects[i] is CollisionShape3D:
+			objects[i].disabled = false
+	$"FirstPerson/PlayerView/EquipPosition".remove_child(equipped)
+	equipped = null
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
 	animation("Death", false, "Death")
@@ -326,7 +355,10 @@ func dropObject(index,grid,idFlag:=false):
 		object = index
 	if range(inventory.size()).has(object):
 		var droppedObject = inventory[object]
-		$"/root/Overworld/Items".add_child(inventory[object])
+		if droppedObject == equipped:
+			_unequip()
+			equipped == null
+		$"/root/Overworld/Items".add_child(droppedObject)
 		droppedObject.set_rotation_degrees(Vector3(0,0,0))
 		droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
 		if droppedObject is RigidBody3D:
@@ -348,6 +380,17 @@ func findInventoryIndexFromID(id):
 		if invEntry.itemStats["id"] == id:
 			return i
 
+func useEquipped():
+	if playerGlobals.inventoryOpen == false:
+		equipped.USE()
+#func highlightObject():
+#	var objects = $"FirstPerson/PlayerView/ItemSelect".get_collision_count()
+#	var selectedObject = null
+#	if objects != null:
+#		for i in objects:
+#			var itemParent = str($"FirstPerson/PlayerView/ItemSelect".get_collider(i).get_parent())
+#			if "Items" in itemParent:
+#				selectedObject = $"FirstPerson/PlayerView/ItemSelect".get_collider(i)
 #func climbStairs():
 #	print (str($"FirstPerson/DummyAnimated/LadderRayFeet".is_colliding())+ " " + str($"FirstPerson/DummyAnimated/StairCheck".is_colliding()))
 #	if $"FirstPerson/DummyAnimated/LadderRayFeet".is_colliding() and !$"FirstPerson/DummyAnimated/StairCheck".is_colliding() and onLadder == false:

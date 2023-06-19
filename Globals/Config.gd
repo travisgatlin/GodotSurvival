@@ -1,4 +1,5 @@
 extends Node
+enum inventoryDrop {DONT_DROP,DROP_EVERYTHING,KEEP_HOTBAR}
 @export var mouseCapture = false
 #in seconds
 var buttonHoldTime = 1.0
