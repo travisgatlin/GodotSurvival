@@ -1,4 +1,5 @@
 extends RigidBody3D
+var drop = preload("res://Generic Sounds/Plastic Bottle hit.wav")
 #ENTRIES PREFILLED MUST BE DEFINED OR OBJECT WILL NOT WORK
 @export var itemStats = {
 	"ItemName" : "Empty 2 Liter",
@@ -18,3 +19,8 @@ extends RigidBody3D
 
 func USE():
 	pass
+
+
+func _on_body_entered(_body):
+	$"Sound".set_stream(drop)
+	$"Sound".play()

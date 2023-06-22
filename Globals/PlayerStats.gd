@@ -17,7 +17,7 @@ signal itemDropped(object,grid)
 signal dropItem(index,grid, idFlag)
 signal equipItem(objectID)
 signal itemUsed(object)
-signal invUpdate(oldId,newObject)
+signal invRestack(object)
 func _ready():
 	pass
 func _process(delta):

@@ -20,12 +20,11 @@ func _ready():
 	playerGlobals.connect("itemDropped", removeFromInventory)
 	playerGlobals.connect("barChange",_on_player_bar_change)
 	playerGlobals.connect("playerDeath", _on_player_death)
-	playerGlobals.connect("invUpdate", updateInventory)
+	playerGlobals.connect("invRestack", addInventory)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	encumberanceCounter()
 	if Input.is_action_just_pressed("Inventory"):
-		generateInventory()
 		openInventory()
 	if mouseVisible == true:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -80,35 +79,33 @@ func openInventory():
 		$"PlayerInventory".visible = false
 		playerGlobals.inventoryOpen = false
 
-func addInventory(object):
-	var player = playerGlobals.playerName
-	if initialInventoryGen == true:
-		var stackExists = objectStackExists(inventoryGrid, object.itemStats["id"])
-		if stackExists == null or object.itemStats["Stackable"] == false:
-			var inventoryEntry = entry.instantiate()
-			inventoryEntry.itemDefinition(object.itemStats,object.itemProps)
-			inventoryEntry.set_name(inventoryEntry.itemStats["ItemName"])
-			inventoryGrid.add_child(inventoryEntry)
-		else:
-			stackExists.stackAdd()
-	
-func generateInventory():
-	if initialInventoryGen == false or inventoryUpdate == true:
-		var player = playerGlobals.playerName
-		var inv = player.inventory
-		for i in inv.size():
-			var inventoryEntry = entry.instantiate()
-			var stackExists = objectStackExists(inventoryGrid, inv[i].itemStats["id"])
-			inventoryEntry.set_name(inv[i].itemStats["ItemName"])
-			if objectStackExists(inventoryGrid, inv[i].itemStats["id"]) == null or inv[i].itemStats["Stackable"] == false:
-				inventoryEntry.itemDefinition(inv[i].itemStats, inv[i].itemProps)
-				inventoryGrid.add_child(inventoryEntry)
-			else:
-					stackExists.stackAdd()
-					inventoryEntry.queue_free()
+func addInventory(object,grid:Control=inventoryGrid):
+	var stackExists = objectStackExists(grid, object.itemProps)
+	if stackExists == null or object.itemStats["Stackable"] == false:
+		var inventoryEntry = entry.instantiate()
+		inventoryEntry.setup(object)
+		inventoryEntry.set_name(object.itemStats["ItemName"])
+		grid.add_child(inventoryEntry)
 	else:
-		return
-	initialInventoryGen = true
+		stackExists.stackAdd(object)
+	
+#func generateInventory():
+#	if initialInventoryGen == false or inventoryUpdate == true:
+#		var player = playerGlobals.playerName
+#		var inv = player.inventory
+#		for i in inv.size():
+#			var inventoryEntry = entry.instantiate()
+#			var stackExists = objectStackExists(inventoryGrid, inv[i].itemStats["id"])
+#			inventoryEntry.set_name(inv[i].itemStats["ItemName"])
+#			if objectStackExists(inventoryGrid, inv[i].itemStats["id"]) == null or inv[i].itemStats["Stackable"] == false:
+#				inventoryEntry.itemDefinition(inv[i].itemStats, inv[i].itemProps)
+#				inventoryGrid.add_child(inventoryEntry)
+#			else:
+#					stackExists.stackAdd()
+#					inventoryEntry.queue_free()
+#	else:
+#		return
+#	initialInventoryGen = true
 
 func amountInStack(array,id):
 	var amount = 0
@@ -117,17 +114,17 @@ func amountInStack(array,id):
 			amount+=1
 	return amount
 	
-func objectStackExists(object,id):
-	var inventoryEntries = object.get_children()
+func objectStackExists(grid,props):
+	var inventoryEntries = grid.get_children()
 	for i in inventoryEntries.size():
-		if inventoryEntries[i].itemStats["id"] == id:
+		if inventoryEntries[i].shouldBeInStack(props):
 			return inventoryEntries[i]
 	return null
 	
 func removeFromInventory(object,grid):
 	var inventoryEntries = grid.get_children()
 	for i in inventoryEntries.size():
-		if inventoryEntries[i].itemStats["id"] == object.itemStats["id"]:
+		if inventoryEntries[i].stack[0].itemStats["id"] == object.itemStats["id"]:
 			if object.itemStats["Stackable"] == true:
 				inventoryEntries[i].stackRemove()
 			else:
@@ -136,14 +133,3 @@ func removeFromInventory(object,grid):
 func encumberanceCounter():
 	var player = playerGlobals.playerName
 	$"PlayerInventory/Inventory/Encumberance".text = (str(player.playerStats["equipWeight"])+"/"+ str(player.playerStats["maxWeight"]))
-
-func updateInventory(oldId,newObject):
-	print ("signal works")
-	var inv = inventoryGrid.get_children()
-	for i in inventoryGrid.get_child_count():
-		print (objectStackExists(inventoryGrid,oldId))
-		if oldId == inv[i].itemStats["id"]:
-			if objectStackExists(inventoryGrid,oldId) == null:
-				inv[i].stackRemove()
-				addInventory(newObject)
-				break

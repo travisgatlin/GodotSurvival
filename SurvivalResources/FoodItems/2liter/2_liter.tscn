@@ -117,6 +117,8 @@ radius = 0.100265
 
 [node name="2 Liter" type="RigidBody3D"]
 continuous_cd = true
+max_contacts_reported = 1
+contact_monitor = true
 script = ExtResource("1_qyvhf")
 
 [node name="2Liter" type="MeshInstance3D" parent="."]
@@ -127,3 +129,12 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0841462, 0)
 shape = SubResource("CylinderShape3D_0uovf")
+
+[node name="Sound" type="AudioStreamPlayer3D" parent="."]
+unit_size = 2.0
+max_db = -2.0
+pitch_scale = 0.5
+max_polyphony = 10
+doppler_tracking = 1
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

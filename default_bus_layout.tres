@@ -2,10 +2,11 @@
 
 [sub_resource type="AudioEffectReverb" id="AudioEffectReverb_q4pp2"]
 resource_name = "Reverb"
-predelay_feedback = 0.13
-room_size = 0.2
-damping = 0.75
+predelay_feedback = 0.2
+room_size = 0.4
+damping = 1.0
 spread = 0.7
+hipass = 0.2
 wet = 0.29
 
 [resource]

@@ -20,6 +20,7 @@ signal getInVehicle(state, id)
 }
 @onready var currentPosition = $BodyCollision2.position
 @onready var cameraPosition = $"FirstPerson/PlayerView".position
+@onready var holdingPosition =$"FirstPerson/PlayerView/EquipPosition"
 var inWater = false
 var inVehicle = false
 var currentVehicle = null
@@ -156,30 +157,31 @@ func _process(_delta):
 	if Input.is_action_just_pressed("Attack") and equipped != null:
 		useEquipped()
 	encumberanceAdd()
-func _objectEquip(objectID):
+	
+func _objectEquip(object):
 	if equipped != null:
 		_unequip()
-	var object = null
-	var equipPosition = $"FirstPerson/PlayerView/EquipPosition"
-	for i in inventory.size():
-		if inventory[i].itemStats["id"] == objectID:
-			object = inventory[i]
-			equipped = object
-			break
 	for i in object.get_child_count():
 		var objects = object.get_children()
 		if objects[i] is CollisionShape3D:
 			objects[i].disabled = true
-	object.set_rotation_degrees(Vector3(0,0,0))
-	$"FirstPerson/PlayerView/EquipPosition".add_child(object)
-	object.set_global_position(equipPosition.get_global_position())
-
+			object.set_rotation_degrees(Vector3(0,0,0))
+			if object.get_parent() != holdingPosition:
+				holdingPosition.add_child(object)
+			object.set_global_position(holdingPosition.get_global_position())
+			equipped = object
+		
+func findEquippableObject(objectID):
+	for i in inventory.size():
+		if inventory[i].itemStats["id"] == objectID:
+			return inventory[i]
+			
 func _unequip():
 	for i in equipped.get_child_count():
 		var objects = equipped.get_children()
 		if objects[i] is CollisionShape3D:
 			objects[i].disabled = false
-	$"FirstPerson/PlayerView/EquipPosition".remove_child(equipped)
+	holdingPosition.remove_child(equipped)
 	equipped = null
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
@@ -357,14 +359,15 @@ func dropObject(index,grid,idFlag:=false):
 		var droppedObject = inventory[object]
 		if droppedObject == equipped:
 			_unequip()
-			equipped == null
+			equipped = null
 		$"/root/Overworld/Items".add_child(droppedObject)
-		droppedObject.set_rotation_degrees(Vector3(0,0,0))
-		droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
 		if droppedObject is RigidBody3D:
 			droppedObject.freeze = false
 			droppedObject.set_angular_velocity(Vector3(0,0,0))
 			droppedObject.set_axis_velocity(self.velocity)
+			droppedObject.linear_velocity.y = 1
+		droppedObject.set_rotation_degrees(Vector3(0,0,0))
+		droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
 		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
 		inventory.remove_at(object)
 

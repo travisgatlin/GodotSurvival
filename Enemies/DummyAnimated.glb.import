@@ -37811,7 +37811,7 @@ _subresources={
 },
 "Walk": {
 "save_to_file/enabled": true,
-"save_to_file/keep_custom_tracks": "",
+"save_to_file/keep_custom_tracks": true,
 "save_to_file/path": "res://Animations/Human/Walk.res",
 "settings/loop_mode": 1,
 "slice_1/end_frame": 0,
@@ -41409,4 +41409,6 @@ _subresources={
 }
 }
 }
+subdivision/import_as="ImporterMesh (bake at import)"
+subdivision/subdivision_level=0
 gltf/embedded_image_handling=1

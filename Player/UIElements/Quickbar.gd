@@ -38,10 +38,12 @@ func _drop_data(_at_position, data):
 	var old = data.get_parent()
 	old.remove_child(data)
 	self.add_child(data)
+	if self.get_child_count() == 1:
+		changeItem()
 
 func changeItem():
 		if equippedIndex <= self.get_child_count()-1 and self.get_child_count() != 0:
 			var item = self.get_child(equippedIndex)
 			if item != null: 
 				item.set("isEquipped", true)
-				playerGlobals.emit_signal("equipItem", item.itemStats["id"])
+				playerGlobals.emit_signal("equipItem", item.stack[0])

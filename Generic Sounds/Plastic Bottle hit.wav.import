@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bdjy58gnulg4o"
+path="res://.godot/imported/Plastic Bottle hit.wav-f9a2ac4e24507eef0255f134d7072bc1.sample"
+
+[deps]
+
+source_file="res://Generic Sounds/Plastic Bottle hit.wav"
+dest_files=["res://.godot/imported/Plastic Bottle hit.wav-f9a2ac4e24507eef0255f134d7072bc1.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

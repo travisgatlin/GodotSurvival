@@ -28,5 +28,13 @@ animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true
 import_script/path=""
-_subresources={}
+_subresources={
+"nodes": {
+"PATH:AnimationPlayer": {
+"import/skip_import": true
+}
+}
+}
+subdivision/import_as="ImporterMesh (bake at import)"
+subdivision/subdivision_level=0
 gltf/embedded_image_handling=1
