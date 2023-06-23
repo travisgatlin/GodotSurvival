@@ -13,6 +13,7 @@ var crushCan = preload("res://SurvivalResources/FoodItems/SodaCan/326211__blu_15
 }
 
 @export var itemProps = {
+	"Description" : "Was once delicious. Probably flat now.",
 	"Weight" : 0.5,
 	"Thirst" : 10.7,
 	"Scraps into" : "Aluminum",

@@ -7,6 +7,7 @@ var gamePaused = false
 var playerDeath = false
 var inventoryUpdate = false
 var entry = preload("res://Player/Inventory Item Base.tscn")
+var totalInventory = null
 @onready var network = $"/root/Networking"
 @onready var playerGlobals = $"/root/PlayerStats"
 @onready var inventoryGrid = $"PlayerInventory/Inventory/Main/InvScroll/MainInv"
@@ -23,6 +24,7 @@ func _ready():
 	playerGlobals.connect("invRestack", addInventory)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
+	totalInventory = inventoryGrid.get_children()+hotbar.get_children()
 	encumberanceCounter()
 	if Input.is_action_just_pressed("Inventory"):
 		openInventory()
@@ -80,35 +82,14 @@ func openInventory():
 		playerGlobals.inventoryOpen = false
 
 func addInventory(object,grid:=$"PlayerInventory/Inventory/Main/InvScroll/MainInv"):
-	var stackIndex = objectStackExists(grid, object.itemProps)
-	print (stackIndex)
-	var inv = grid.get_children()
-	#print(objectStackExists(grid, object.itemProps))
+	var stackIndex = objectStackExists(object.itemProps)
 	if stackIndex == null or object.itemStats["Stackable"] == false:
 		var inventoryEntry = entry.instantiate()
 		inventoryEntry.setup(object)
 		inventoryEntry.set_name(object.itemStats["ItemName"])
 		grid.add_child(inventoryEntry)
 	else:
-		inv[stackIndex].stackAdd(object)
-	
-#func generateInventory():
-#	if initialInventoryGen == false or inventoryUpdate == true:
-#		var player = playerGlobals.playerName
-#		var inv = player.inventory
-#		for i in inv.size():
-#			var inventoryEntry = entry.instantiate()
-#			var stackExists = objectStackExists(inventoryGrid, inv[i].itemStats["id"])
-#			inventoryEntry.set_name(inv[i].itemStats["ItemName"])
-#			if objectStackExists(inventoryGrid, inv[i].itemStats["id"]) == null or inv[i].itemStats["Stackable"] == false:
-#				inventoryEntry.itemDefinition(inv[i].itemStats, inv[i].itemProps)
-#				inventoryGrid.add_child(inventoryEntry)
-#			else:
-#					stackExists.stackAdd()
-#					inventoryEntry.queue_free()
-#	else:
-#		return
-#	initialInventoryGen = true
+		totalInventory[stackIndex].stackAdd(object)
 
 func amountInStack(array,id):
 	var amount = 0
@@ -117,12 +98,10 @@ func amountInStack(array,id):
 			amount+=1
 	return amount
 	
-func objectStackExists(grid,props):
+func objectStackExists(props):
 	var exists = null
-	var inventoryEntries = grid.get_children()
-	print(grid.get_children())
-	for i in inventoryEntries.size():
-		if inventoryEntries[i].stack[0].itemProps != props:
+	for i in totalInventory.size():
+		if totalInventory[i].stack[0].itemProps != props:
 			exists = null
 		else:
 			return i
@@ -130,13 +109,12 @@ func objectStackExists(grid,props):
 	return exists
 	
 func removeFromInventory(object,grid):
-	var inventoryEntries = grid.get_children()
-	for i in inventoryEntries.size():
-		if inventoryEntries[i].stack[0].itemStats["id"] == object.itemStats["id"]:
+	for i in totalInventory.size():
+		if totalInventory[i].stack[0].itemStats["id"] == object.itemStats["id"]:
 			if object.itemStats["Stackable"] == true:
-				inventoryEntries[i].stackRemove()
+				totalInventory[i].stackRemove()
 			else:
-				inventoryEntries[i].stackRemove()
+				totalInventory[i].stackRemove()
 				break
 func encumberanceCounter():
 	var player = playerGlobals.playerName

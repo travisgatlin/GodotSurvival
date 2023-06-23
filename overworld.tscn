@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://bfdjmvn68vckh"]
+[gd_scene load_steps=13 format=3 uid="uid://bfdjmvn68vckh"]
 
 [ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
 [ext_resource type="PackedScene" uid="uid://cmigrniyjx2d6" path="res://SurvivalResources/FoodItems/2liter/2_liter.tscn" id="3_oqhjp"]
+[ext_resource type="PackedScene" uid="uid://rkdgei2xy8au" path="res://SurvivalResources/Ammo/C Battery/c_battery.tscn" id="5_da1xe"]
 [ext_resource type="PackedScene" uid="uid://bmir2b0ethhoa" path="res://TestLevel/test_building.tscn" id="5_s3flu"]
 [ext_resource type="PackedScene" uid="uid://dkjx46pr27guo" path="res://Tools/Flashlight/flashlight.tscn" id="6_2gq7a"]
 [ext_resource type="PackedScene" uid="uid://l737u4w57mlj" path="res://SurvivalResources/FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
@@ -127,6 +128,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67114, 1.81306, -1.13129)
 
 [node name="SodaCan4" parent="Items" instance=ExtResource("6_3bk61")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.54115, 1.7173, -1.19694)
+
+[node name="Battery" parent="Items" instance=ExtResource("5_da1xe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.141562)
+
+[node name="Battery2" parent="Items" instance=ExtResource("5_da1xe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.259845)
+
+[node name="Battery3" parent="Items" instance=ExtResource("5_da1xe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.36364)
+
+[node name="Battery4" parent="Items" instance=ExtResource("5_da1xe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.497233)
+
+[node name="Battery5" parent="Items" instance=ExtResource("5_da1xe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42623, 1.4758, 0.313551)
 
 [node name="Ladder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)

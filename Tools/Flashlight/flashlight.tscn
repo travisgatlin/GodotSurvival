@@ -24,6 +24,7 @@ var drop = preload(\"res://Generic Sounds/Solid Object Hitting Ground.wav\")
 }
 #FOR CUSTOM FUNCTIONS, IF SCRAPS INTO AND AMOUNT IS NOT DEFINED WITH AN IN GAME MATERIAL, SCRAPPING OBJECT WILL NOT WORK
 @export var itemProps = {
+	\"Description\" : \"Slightly too dim, better than nothing though.\",
 	\"Weight\" : 3.5 ,
 	\"Scraps into\" : \"Aluminum\",
 	\"Amount\" : 3.5,

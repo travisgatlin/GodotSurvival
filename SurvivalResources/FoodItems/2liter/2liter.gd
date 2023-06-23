@@ -11,6 +11,7 @@ var drop = preload("res://Generic Sounds/Plastic Bottle hit.wav")
 }
 #FOR CUSTOM FUNCTIONS, IF SCRAPS INTO AND AMOUNT IS NOT DEFINED WITH AN IN GAME MATERIAL, SCRAPPING OBJECT WILL NOT WORK
 @export var itemProps = {
+	"Description" : "Fun to bonk with",
 	"Weight" : 0.2,
 	"Scraps into" : "Plastic",
 	"Amount" : 15.0
