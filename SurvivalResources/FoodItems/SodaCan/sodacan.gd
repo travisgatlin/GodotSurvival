@@ -29,14 +29,15 @@ func crush():
 		crushed = true
 		itemStats["InvIcon"] = "res://InventoryIcons/SodaCanCrushedIcon.png"
 		itemStats["id"] = 644857
+		itemProps.erase("Thirst")
 		self.freeze = true
 		$"GameCan".visible = false
 		$"CanCrushedlow".visible = true
 
 func _on_body_entered(body):
-	if crushed == true:
+	if crushed == true and is_inside_tree():
 		$"Sound".set_stream(drop)
 		$"Sound".play()
-	else:
+	elif is_inside_tree():
 		$"Sound".set_stream(dropFull)
 		$"Sound".play()

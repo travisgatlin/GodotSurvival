@@ -79,15 +79,18 @@ func openInventory():
 		$"PlayerInventory".visible = false
 		playerGlobals.inventoryOpen = false
 
-func addInventory(object,grid:Control=inventoryGrid):
-	var stackExists = objectStackExists(grid, object.itemProps)
-	if stackExists == null or object.itemStats["Stackable"] == false:
+func addInventory(object,grid:=$"PlayerInventory/Inventory/Main/InvScroll/MainInv"):
+	var stackIndex = objectStackExists(grid, object.itemProps)
+	print (stackIndex)
+	var inv = grid.get_children()
+	#print(objectStackExists(grid, object.itemProps))
+	if stackIndex == null or object.itemStats["Stackable"] == false:
 		var inventoryEntry = entry.instantiate()
 		inventoryEntry.setup(object)
 		inventoryEntry.set_name(object.itemStats["ItemName"])
 		grid.add_child(inventoryEntry)
 	else:
-		stackExists.stackAdd(object)
+		inv[stackIndex].stackAdd(object)
 	
 #func generateInventory():
 #	if initialInventoryGen == false or inventoryUpdate == true:
@@ -115,11 +118,16 @@ func amountInStack(array,id):
 	return amount
 	
 func objectStackExists(grid,props):
+	var exists = null
 	var inventoryEntries = grid.get_children()
+	print(grid.get_children())
 	for i in inventoryEntries.size():
-		if inventoryEntries[i].shouldBeInStack(props):
-			return inventoryEntries[i]
-	return null
+		if inventoryEntries[i].stack[0].itemProps != props:
+			exists = null
+		else:
+			return i
+		#print (inventoryEntries[i].shouldBeInStack(props))
+	return exists
 	
 func removeFromInventory(object,grid):
 	var inventoryEntries = grid.get_children()
