@@ -386,15 +386,3 @@ func findInventoryIndexFromID(id):
 func useEquipped():
 	if playerGlobals.inventoryOpen == false:
 		equipped.USE()
-#func highlightObject():
-#	var objects = $"FirstPerson/PlayerView/ItemSelect".get_collision_count()
-#	var selectedObject = null
-#	if objects != null:
-#		for i in objects:
-#			var itemParent = str($"FirstPerson/PlayerView/ItemSelect".get_collider(i).get_parent())
-#			if "Items" in itemParent:
-#				selectedObject = $"FirstPerson/PlayerView/ItemSelect".get_collider(i)
-#func climbStairs():
-#	print (str($"FirstPerson/DummyAnimated/LadderRayFeet".is_colliding())+ " " + str($"FirstPerson/DummyAnimated/StairCheck".is_colliding()))
-#	if $"FirstPerson/DummyAnimated/LadderRayFeet".is_colliding() and !$"FirstPerson/DummyAnimated/StairCheck".is_colliding() and onLadder == false:
-#		self.translate(Vector3(0,0.3,0))

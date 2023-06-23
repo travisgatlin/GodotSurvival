@@ -37,6 +37,7 @@ func stackAdd(ref):
 		$"Amount".text = "(" + str(stack.size()) + ")"
 	elif stack.size() == 1:
 		$"Amount".visible = false
+		
 func stackRemove():
 	stack.remove_at(0)
 	$"Amount".text = "(" + str(stack.size()) + ")"
