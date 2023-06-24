@@ -103,18 +103,6 @@ size = Vector3(9.89102, 2, 10.8809)
 
 [node name="Items" type="Node3D" parent="."]
 
-[node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -1.76938)
-
-[node name="2 Liter2" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0885, 1.64465, -1.76938)
-
-[node name="2 Liter3" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58985, 1.64465, -0.218892)
-
-[node name="2 Liter4" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0885, 1.64465, -0.218892)
-
 [node name="Flashlight" parent="Items" instance=ExtResource("6_2gq7a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.37229, 1.51757, -0.747203)
 
@@ -144,6 +132,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.497233)
 
 [node name="Battery5" parent="Items" instance=ExtResource("5_da1xe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42623, 1.4758, 0.313551)
+
+[node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5542, 1.62258, -1.81383)
 
 [node name="Ladder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)

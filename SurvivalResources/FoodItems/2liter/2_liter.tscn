@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://cmigrniyjx2d6"]
 
 [ext_resource type="Script" path="res://SurvivalResources/FoodItems/2liter/2liter.gd" id="1_qyvhf"]
-[ext_resource type="Texture2D" uid="uid://chudtgvnlxixn" path="res://SurvivalResources/FoodItems/2liter/2 Liter_Bottle-Bottle Alpha.png" id="2_bvgva"]
+[ext_resource type="Texture2D" uid="uid://bs00o4bypcxvp" path="res://SurvivalResources/FoodItems/2liter/2 Liter_Bottle-Bottle Alpha.png" id="2_bvgva"]
 [ext_resource type="Texture2D" uid="uid://b6oo6j2820wcl" path="res://SurvivalResources/FoodItems/2liter/Bottle.png" id="2_rii7o"]
 [ext_resource type="Texture2D" uid="uid://4vqys3jb75k0" path="res://SurvivalResources/FoodItems/2liter/2 Liter_Bottle Normal.png" id="3_uvlpr"]
 
