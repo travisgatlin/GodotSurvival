@@ -2,7 +2,7 @@ extends Node
 var peer = ENetMultiplayerPeer.new()
 var defaultPort = 9090
 var incomingPlayerID = null
-var playerList = []
+var connectedPlayers = []
 func _ready():
 	multiplayer.peer_connected.connect(playerConnected)
 	multiplayer.peer_disconnected.connect(playerDisconnected)
@@ -22,7 +22,7 @@ func connectServer(ip, port):
 	
 func playerConnected(id):
 	incomingPlayerID = id
-	print("connected"+ " " + str(id))
+	#print("connected"+ " " + str(id))
 
 func playerDisconnected(id):
 	print("player " + str(id) + " has disconnected.")

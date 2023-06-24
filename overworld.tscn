@@ -106,18 +106,6 @@ size = Vector3(9.89102, 2, 10.8809)
 [node name="Flashlight" parent="Items" instance=ExtResource("6_2gq7a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.37229, 1.51757, -0.747203)
 
-[node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67114, 1.81306, -0.965191)
-
-[node name="SodaCan2" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67114, 1.81306, -0.772524)
-
-[node name="SodaCan3" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67114, 1.81306, -1.13129)
-
-[node name="SodaCan4" parent="Items" instance=ExtResource("6_3bk61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.54115, 1.7173, -1.19694)
-
 [node name="Battery" parent="Items" instance=ExtResource("5_da1xe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.141562)
 
@@ -136,6 +124,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42623, 1.4758, 0.313551)
 [node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5542, 1.62258, -1.81383)
 
+[node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75784, 1.5903, -1.39016)
+
+[node name="SodaCan2" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75784, 1.5903, -1.24541)
+
+[node name="SodaCan3" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75784, 1.5903, -1.10768)
+
+[node name="SodaCan4" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75784, 1.5903, -0.987166)
+
+[node name="SodaCan5" parent="Items" instance=ExtResource("6_3bk61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75784, 1.5903, -0.812441)
+
 [node name="Ladder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
 metadata/Ladder = true
@@ -144,12 +147,12 @@ metadata/Ladder = true
 transform = Transform3D(0.973175, 0, 0.230067, 0, 1, 0, -0.230067, 0, 0.973175, -4.49721, 0.671872, -0.22945)
 metadata/Ladder = true
 
-[node name="Respawn" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.68642, 4.98645, -0.675611)
+[node name="Spawn" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.77754, 2.30434, -0.675611)
 metadata/Spawn = true
 
 [node name="MP SPAWN" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.29749, 12.3269)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35826, 6.0636, 0.191828)
 
 [node name="Table" type="CSGBox3D" parent="."]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.732265, 1.38291, 0)

@@ -1,4 +1,7 @@
 extends Control
+var remotePlayerInfo = {
+	"Name": "Client",
+}
 @onready var mp = $"/root/Networking"
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -7,11 +10,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-		if self.visible == true:
-			$PlayerList.clear()
-			for i in mp.playerList.size():
-				$PlayerList.add_item(str(i))
-
+	pass
 
 func _on_cancel_pressed():
 	$LobbyLabel.visible = false
@@ -22,6 +21,7 @@ func _on_cancel_pressed():
 func _on_join_pressed():
 	$"LobbyLabel".text = "Attempting to connect to host..."
 	$"LobbyLabel".visible = true
+	remotePlayerInfo["Name"] = $"NameEdit".get_text()
 	if $"NameEdit".get_text() != "":
 		if $"Port".get_text() == "":
 			mp.connectServer($"IP".text,mp.defaultPort)
@@ -29,6 +29,8 @@ func _on_join_pressed():
 			mp.connectServer($"IP".text,int($"Port".text))
 
 func connectedSuccessfully():
+	$"../HostLobby".rpc("registerPlayer",remotePlayerInfo)
+	print (mp.connectedPlayers)
 	$"LobbyLabel".text = "Waiting for host to begin game..."
 	$"LobbyLabel".visible = true
 

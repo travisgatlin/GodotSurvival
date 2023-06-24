@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cw5qjf78vo076"
+uid="uid://br1l5ewacarka"
 path="res://.godot/imported/Soda can.glb-fec9d5659fcea5a8502b546aae031f2d.scn"
 
 [deps]
@@ -28,13 +28,7 @@ animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true
 import_script/path=""
-_subresources={
-"nodes": {
-"PATH:AnimationPlayer": {
-"import/skip_import": true
-}
-}
-}
+_subresources={}
 subdivision/import_as="ImporterMesh (bake at import)"
 subdivision/subdivision_level=0
 gltf/embedded_image_handling=1

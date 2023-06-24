@@ -63,6 +63,7 @@ offset_left = 409.0
 offset_top = 103.0
 offset_right = 762.0
 offset_bottom = 146.0
+text = "HostTervis"
 placeholder_text = "Player Name"
 
 [node name="MainMenu" type="Control" parent="."]
@@ -128,6 +129,8 @@ offset_top = -323.0
 offset_right = 303.0
 offset_bottom = 323.0
 grow_vertical = 2
+item_count = 1
+item_0/text = ""
 
 [node name="Join" type="Button" parent="PeerLobby"]
 layout_mode = 0
@@ -151,6 +154,7 @@ offset_left = 330.0
 offset_top = 11.0
 offset_right = 683.0
 offset_bottom = 54.0
+text = "PeerTervis"
 placeholder_text = "Player Name"
 
 [node name="IP" type="TextEdit" parent="PeerLobby"]
@@ -166,6 +170,7 @@ offset_right = 106.0
 offset_bottom = 21.0
 grow_horizontal = 2
 grow_vertical = 2
+text = "localhost"
 placeholder_text = "IP"
 
 [node name="Port" type="TextEdit" parent="PeerLobby"]
@@ -181,6 +186,7 @@ offset_right = 256.0
 offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 2
+text = "9090"
 placeholder_text = "Port"
 
 [node name="LobbyLabel" type="Label" parent="PeerLobby"]
@@ -193,6 +199,7 @@ offset_bottom = 635.0
 text = "Waiting for host to start game...."
 
 [connection signal="visibility_changed" from="HostLobby" to="HostLobby" method="_on_visibility_changed"]
+[connection signal="pressed" from="HostLobby/Start" to="HostLobby" method="_on_start_pressed"]
 [connection signal="pressed" from="HostLobby/Cancel" to="HostLobby" method="_on_cancel_pressed"]
 [connection signal="pressed" from="HostLobby/PlayerName" to="HostLobby" method="_on_player_name_pressed"]
 [connection signal="item_activated" from="MainMenu/Menu" to="MainMenu/Menu" method="_on_item_activated"]
