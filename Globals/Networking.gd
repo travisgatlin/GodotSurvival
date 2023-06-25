@@ -3,6 +3,7 @@ var peer = ENetMultiplayerPeer.new()
 var defaultPort = 9090
 var incomingPlayerID = null
 var connectedPlayers = []
+var maxPlayers = null
 func _ready():
 	multiplayer.peer_connected.connect(playerConnected)
 	multiplayer.peer_disconnected.connect(playerDisconnected)
@@ -11,8 +12,8 @@ func _process(_delta):
 	pass
 
 
-func hostServer(port):
-	peer.create_server(int(port))
+func hostServer(port:int=defaultPort,maxPlayers:int=2):
+	peer.create_server(int(port),int(maxPlayers))
 	multiplayer.multiplayer_peer = peer
 	
 	
@@ -22,7 +23,15 @@ func connectServer(ip, port):
 	
 func playerConnected(id):
 	incomingPlayerID = id
-	#print("connected"+ " " + str(id))
+	print("connected"+ " " + str(id))
 
 func playerDisconnected(id):
 	print("player " + str(id) + " has disconnected.")
+
+#@rpc("any_peer")
+#func registerPlayer(info):
+#	info["id"] = incomingPlayerID
+#	connectedPlayers.append(info)
+#	$"PlayerList".clear()
+#	for i in connectedPlayers.size():
+#		$"PlayerList".add_item(str(info["Name"]))

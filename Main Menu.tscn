@@ -23,50 +23,103 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_73um5")
 
-[node name="Start" type="Button" parent="HostLobby"]
-layout_mode = 0
-offset_left = 311.0
-offset_top = 591.0
-offset_right = 417.0
-offset_bottom = 647.0
-text = "Start Game"
-
-[node name="Cancel" type="Button" parent="HostLobby"]
-layout_mode = 0
-offset_left = 426.0
-offset_top = 591.0
-offset_right = 532.0
-offset_bottom = 647.0
-text = "Cancel"
-
-[node name="PlayerList" type="ItemList" parent="HostLobby"]
+[node name="Panel" type="Panel" parent="HostLobby"]
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -323.0
-offset_right = 303.0
-offset_bottom = 323.0
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.34
+anchor_right = 0.75
+anchor_bottom = 0.71
+offset_top = 0.199997
+grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PlayerName" type="Button" parent="HostLobby"]
-layout_mode = 0
-offset_left = 774.0
-offset_top = 99.0
-offset_right = 880.0
-offset_bottom = 155.0
-text = "Submit"
+[node name="VBoxContainer" type="VBoxContainer" parent="HostLobby/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.01
+anchor_right = 0.99
+anchor_bottom = 0.99
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
-[node name="NameEdit" type="TextEdit" parent="HostLobby"]
-layout_mode = 0
-offset_left = 409.0
-offset_top = 103.0
-offset_right = 762.0
-offset_bottom = 146.0
+[node name="FlowContainer" type="FlowContainer" parent="HostLobby/Panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Start" type="Button" parent="HostLobby/Panel/VBoxContainer/FlowContainer"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="NameEdit" type="TextEdit" parent="HostLobby/Panel/VBoxContainer/FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "HostTervis"
 placeholder_text = "Player Name"
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="Player Slider" type="HSlider" parent="HostLobby/Panel/VBoxContainer"]
+layout_mode = 2
+min_value = 2.0
+max_value = 32.0
+value = 2.0
+allow_greater = true
+
+[node name="Players" type="HFlowContainer" parent="HostLobby/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HostLobby/Panel/VBoxContainer/Players"]
+layout_mode = 2
+text = "Max Players:"
+
+[node name="PlayerCount" type="LineEdit" parent="HostLobby/Panel/VBoxContainer/Players"]
+layout_mode = 2
+text = "2"
+max_length = 4
+expand_to_text_length = true
+
+[node name="Warning" type="Label" parent="HostLobby/Panel/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Warning: Player counts greater than 32 may cause lag and instability!"
+
+[node name="Passwordbox" type="HBoxContainer" parent="HostLobby/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Password" type="LineEdit" parent="HostLobby/Panel/VBoxContainer/Passwordbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+secret = true
+
+[node name="HidePassword" type="CheckBox" parent="HostLobby/Panel/VBoxContainer/Passwordbox"]
+layout_mode = 2
+button_pressed = true
+text = "Hide Password"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HostLobby/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="PortOverride" type="CheckBox" parent="HostLobby/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Override Default Port"
+
+[node name="Port" type="LineEdit" parent="HostLobby/Panel/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+placeholder_text = "9090"
+expand_to_text_length = true
+
+[node name="Cancel" type="Button" parent="HostLobby/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Cancel"
 
 [node name="MainMenu" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -111,7 +164,6 @@ item_5/text = "Quit"
 script = ExtResource("2_tn3w8")
 
 [node name="PeerLobby" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -120,88 +172,73 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_62jpe")
 
-[node name="PlayerList" type="ItemList" parent="PeerLobby"]
+[node name="Panel" type="Panel" parent="PeerLobby"]
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -323.0
-offset_right = 303.0
-offset_bottom = 323.0
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+grow_horizontal = 2
 grow_vertical = 2
-item_count = 1
-item_0/text = ""
 
-[node name="Join" type="Button" parent="PeerLobby"]
-layout_mode = 0
-offset_left = 848.0
-offset_top = 299.0
-offset_right = 954.0
-offset_bottom = 355.0
-text = "Connect"
+[node name="Vbox" type="VBoxContainer" parent="PeerLobby/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.01
+anchor_right = 0.99
+anchor_bottom = 0.99
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Cancel" type="Button" parent="PeerLobby"]
-layout_mode = 0
-offset_left = 1036.0
-offset_top = 586.0
-offset_right = 1142.0
-offset_bottom = 642.0
-text = "Cancel"
+[node name="Serverlist" type="ItemList" parent="PeerLobby/Panel/Vbox"]
+layout_mode = 2
+size_flags_vertical = 3
 
-[node name="NameEdit" type="TextEdit" parent="PeerLobby"]
-layout_mode = 0
-offset_left = 330.0
-offset_top = 11.0
-offset_right = 683.0
-offset_bottom = 54.0
+[node name="Connection" type="HFlowContainer" parent="PeerLobby/Panel/Vbox"]
+layout_mode = 2
+size_flags_vertical = 8
+size_flags_stretch_ratio = 0.0
+
+[node name="NameEdit" type="TextEdit" parent="PeerLobby/Panel/Vbox/Connection"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 text = "PeerTervis"
 placeholder_text = "Player Name"
+scroll_fit_content_height = true
 
-[node name="IP" type="TextEdit" parent="PeerLobby"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -247.0
-offset_top = -22.0
-offset_right = 106.0
-offset_bottom = 21.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "localhost"
-placeholder_text = "IP"
+[node name="IP" type="LineEdit" parent="PeerLobby/Panel/Vbox/Connection"]
+layout_mode = 2
+placeholder_text = "111.111.11.11"
+expand_to_text_length = true
 
-[node name="Port" type="TextEdit" parent="PeerLobby"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 122.0
-offset_top = -21.0
-offset_right = 256.0
-offset_bottom = 22.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Port" type="LineEdit" parent="PeerLobby/Panel/Vbox/Connection"]
+layout_mode = 2
 text = "9090"
-placeholder_text = "Port"
+max_length = 5
+expand_to_text_length = true
 
-[node name="LobbyLabel" type="Label" parent="PeerLobby"]
-visible = false
-layout_mode = 0
-offset_left = 454.0
-offset_top = 609.0
-offset_right = 834.0
-offset_bottom = 635.0
+[node name="Join" type="Button" parent="PeerLobby/Panel/Vbox/Connection"]
+layout_mode = 2
+text = "Connect"
+
+[node name="Cancel" type="Button" parent="PeerLobby/Panel/Vbox/Connection"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="LobbyLabel" type="Label" parent="PeerLobby/Panel/Vbox/Connection"]
+layout_mode = 2
 text = "Waiting for host to start game...."
 
 [connection signal="visibility_changed" from="HostLobby" to="HostLobby" method="_on_visibility_changed"]
-[connection signal="pressed" from="HostLobby/Start" to="HostLobby" method="_on_start_pressed"]
-[connection signal="pressed" from="HostLobby/Cancel" to="HostLobby" method="_on_cancel_pressed"]
-[connection signal="pressed" from="HostLobby/PlayerName" to="HostLobby" method="_on_player_name_pressed"]
+[connection signal="pressed" from="HostLobby/Panel/VBoxContainer/FlowContainer/Start" to="HostLobby" method="_on_start_pressed"]
+[connection signal="value_changed" from="HostLobby/Panel/VBoxContainer/Player Slider" to="HostLobby" method="_on_player_slider_value_changed"]
+[connection signal="text_changed" from="HostLobby/Panel/VBoxContainer/Players/PlayerCount" to="HostLobby" method="_on_player_count_text_changed"]
+[connection signal="toggled" from="HostLobby/Panel/VBoxContainer/Passwordbox/HidePassword" to="HostLobby" method="_on_hide_password_toggled"]
+[connection signal="toggled" from="HostLobby/Panel/VBoxContainer/HBoxContainer/PortOverride" to="HostLobby" method="_on_port_override_toggled"]
+[connection signal="pressed" from="HostLobby/Panel/VBoxContainer/Cancel" to="HostLobby" method="_on_cancel_pressed"]
 [connection signal="item_activated" from="MainMenu/Menu" to="MainMenu/Menu" method="_on_item_activated"]
-[connection signal="pressed" from="PeerLobby/Join" to="PeerLobby" method="_on_join_pressed"]
-[connection signal="pressed" from="PeerLobby/Cancel" to="PeerLobby" method="_on_cancel_pressed"]
+[connection signal="pressed" from="PeerLobby/Panel/Vbox/Connection/Join" to="PeerLobby" method="_on_join_pressed"]
+[connection signal="pressed" from="PeerLobby/Panel/Vbox/Connection/Cancel" to="PeerLobby" method="_on_cancel_pressed"]

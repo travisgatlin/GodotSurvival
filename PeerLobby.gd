@@ -29,8 +29,6 @@ func _on_join_pressed():
 			mp.connectServer($"IP".text,int($"Port".text))
 
 func connectedSuccessfully():
-	$"../HostLobby".rpc("registerPlayer",remotePlayerInfo)
-	print (mp.connectedPlayers)
 	$"LobbyLabel".text = "Waiting for host to begin game..."
 	$"LobbyLabel".visible = true
 
