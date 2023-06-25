@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://l737u4w57mlj"]
+[gd_scene load_steps=9 format=3 uid="uid://l737u4w57mlj"]
 
 [ext_resource type="Script" path="res://SurvivalResources/FoodItems/SodaCan/sodacan.gd" id="1_e14ky"]
 [ext_resource type="Texture2D" uid="uid://vsdeqxtyqmye" path="res://SurvivalResources/FoodItems/SodaCan/Soda can_GameCan.png" id="2_7ox3k"]
@@ -42,6 +42,26 @@ radius = 0.0283475
 [sub_resource type="BoxShape3D" id="BoxShape3D_8ymiv"]
 size = Vector3(0.0566949, 0.102457, 0.053399)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q0bwx"]
+properties/0/path = NodePath("Uncrushed:disabled")
+properties/0/spawn = false
+properties/0/sync = true
+properties/1/path = NodePath("Crushed:disabled")
+properties/1/spawn = false
+properties/1/sync = true
+properties/2/path = NodePath("GameCan:blend_shapes/Crush")
+properties/2/spawn = false
+properties/2/sync = true
+properties/3/path = NodePath("GameCan:blend_shapes/Open Top")
+properties/3/spawn = false
+properties/3/sync = true
+properties/4/path = NodePath(".:itemStats")
+properties/4/spawn = false
+properties/4/sync = true
+properties/5/path = NodePath(".:itemProps")
+properties/5/spawn = false
+properties/5/sync = true
+
 [node name="SodaCan" type="RigidBody3D"]
 continuous_cd = true
 max_contacts_reported = 1
@@ -68,5 +88,8 @@ disabled = true
 unit_size = 2.0
 max_db = -2.0
 doppler_tracking = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_q0bwx")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

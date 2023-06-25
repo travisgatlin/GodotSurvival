@@ -32,6 +32,7 @@ var respawnFlag = false
 var initialSpawn = true
 var input_dir = Vector2(0,0)
 var equipped = null
+var notPlayer = false
 
 @export var inventory = []
 
@@ -72,6 +73,8 @@ var currentRunSpeed = 5.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
+	if notPlayer == true:
+		$"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/default".set("cast_shadow", 1)
 	$"FirstPerson/PlayerView/ItemSelect".add_exception(self)
 	animation("Movement", false , "Walk",0)
 	if respawnFlag == true or initialSpawn == true:

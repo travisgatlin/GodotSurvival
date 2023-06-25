@@ -26,7 +26,7 @@ var drink = preload ("res://Generic Sounds/534336__defaultv__drink_gulp.wav")
 func USE():
 	openCan()
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	if crushed == true and is_inside_tree():
 		$"Sound".set_stream(drop)
 		$"Sound".play()

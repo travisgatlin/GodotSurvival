@@ -13,26 +13,27 @@ func _process(_delta):
 	pass
 
 func _on_cancel_pressed():
-	$LobbyLabel.visible = false
+	$Panel/Vbox/Connection/LobbyLabel.visible = false
 	self.visible = false
 	$"../MainMenu".visible = true
 	mp.peer.close()
 
 func _on_join_pressed():
-	$"LobbyLabel".text = "Attempting to connect to host..."
-	$"LobbyLabel".visible = true
-	remotePlayerInfo["Name"] = $"NameEdit".get_text()
-	if $"NameEdit".get_text() != "":
-		if $"Port".get_text() == "":
-			mp.connectServer($"IP".text,mp.defaultPort)
+	$"Panel/Vbox/Connection/LobbyLabel".text = "Attempting to connect to host..."
+	$"Panel/Vbox/Connection/LobbyLabel".visible = true
+	remotePlayerInfo["Name"] = $"Panel/Vbox/Connection/NameEdit".get_text()
+	if $"Panel/Vbox/Connection/NameEdit".get_text() != "":
+		if $"Panel/Vbox/Connection/Port".get_text() == "":
+			mp.connectServer($"Panel/Vbox/Connection/IP".text,mp.defaultPort)
 		else:
-			mp.connectServer($"IP".text,int($"Port".text))
+			mp.connectServer($"Panel/Vbox/Connection/IP".text,int($"Panel/Vbox/Connection/Port".text))
 
 func connectedSuccessfully():
-	$"LobbyLabel".text = "Waiting for host to begin game..."
-	$"LobbyLabel".visible = true
+	$"Panel/Vbox/Connection/LobbyLabel".text = "Synchronizing world with host..."
+	$"Panel/Vbox/Connection/LobbyLabel".visible = true
+	$"../MainMenu/Menu".startGame()
 
 func connectionFailed():
-	$LobbyLabel.visible = true
-	$"LobbyLabel".text = "Connection Failed. Please check your connection or try another IP."
+	$"Panel/Vbox/Connection/LobbyLabel".visible = true
+	$"Panel/Vbox/Connection/LobbyLabel".text = "Connection Failed. Please check your connection or try another IP."
 	mp.peer.close()

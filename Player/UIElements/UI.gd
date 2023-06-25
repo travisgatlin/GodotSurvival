@@ -108,7 +108,7 @@ func objectStackExists(props):
 		#print (inventoryEntries[i].shouldBeInStack(props))
 	return exists
 	
-func removeFromInventory(object,grid):
+func removeFromInventory(object,_grid):
 	for i in totalInventory.size():
 		if totalInventory[i].stack[0].itemStats["id"] == object.itemStats["id"]:
 			if object.itemStats["Stackable"] == true:

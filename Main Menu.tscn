@@ -119,7 +119,6 @@ size_flags_vertical = 8
 text = "Cancel"
 
 [node name="MainMenu" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -164,6 +163,7 @@ item_5/text = "Quit"
 script = ExtResource("2_tn3w8")
 
 [node name="PeerLobby" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -229,6 +229,7 @@ layout_mode = 2
 text = "Cancel"
 
 [node name="LobbyLabel" type="Label" parent="PeerLobby/Panel/Vbox/Connection"]
+visible = false
 layout_mode = 2
 text = "Waiting for host to start game...."
 

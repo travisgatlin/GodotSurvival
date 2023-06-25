@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cmigrniyjx2d6"]
+[gd_scene load_steps=15 format=3 uid="uid://cmigrniyjx2d6"]
 
 [ext_resource type="Script" path="res://SurvivalResources/FoodItems/2liter/2liter.gd" id="1_qyvhf"]
 [ext_resource type="Texture2D" uid="uid://bs00o4bypcxvp" path="res://SurvivalResources/FoodItems/2liter/2 Liter_Bottle-Bottle Alpha.png" id="2_bvgva"]
@@ -97,6 +97,26 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_1yqto")
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5o7rg"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = false
+properties/0/sync = true
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = false
+properties/1/sync = true
+properties/2/path = NodePath(".:itemProps")
+properties/2/spawn = false
+properties/2/sync = true
+properties/3/path = NodePath(".:itemStats")
+properties/3/spawn = false
+properties/3/sync = true
+properties/4/path = NodePath("Liquid:blend_shapes/Liquid")
+properties/4/spawn = false
+properties/4/sync = true
+properties/5/path = NodePath("Liquid:blend_shapes/LiquidTop")
+properties/5/spawn = false
+properties/5/sync = true
+
 [node name="2 Liter" type="RigidBody3D"]
 continuous_cd = true
 max_contacts_reported = 1
@@ -123,5 +143,8 @@ max_db = -2.0
 pitch_scale = 0.5
 max_polyphony = 10
 doppler_tracking = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5o7rg")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

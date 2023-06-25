@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dkjx46pr27guo"]
+[gd_scene load_steps=21 format=3 uid="uid://dkjx46pr27guo"]
 
 [ext_resource type="Texture2D" uid="uid://mhi5alagstsj" path="res://Tools/Flashlight/Flashlight_Knurl_norm.png" id="1_6e1la"]
 [ext_resource type="Texture2D" uid="uid://dem6k8iqqt3n6" path="res://Tools/Flashlight/Flashlight_Flashlight Face_norml.png" id="2_u8ai0"]
@@ -30,7 +30,7 @@ var drop = preload(\"res://Generic Sounds/Solid Object Hitting Ground.wav\")
 	\"Amount\" : 3.5,
 	\"Battery\" : 100
 	}
-func _process(delta):
+func _process(_delta):
 	if light == true:
 		var batteryPercent = floor(($Battery.time_left/$Battery.wait_time)*100)
 		itemProps[\"Battery\"] = batteryPercent
@@ -65,7 +65,7 @@ func newBattery():
 	$\"Battery\".start($\"Battery\".wait_time)
 
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	$\"Sound\".set_stream(drop)
 	$\"Sound\".play()
 "
@@ -303,6 +303,23 @@ shadow_mesh = SubResource("ArrayMesh_1oqs1")
 radius = 0.0661096
 height = 0.441207
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0iovj"]
+properties/0/path = NodePath("Lens off:visible")
+properties/0/spawn = false
+properties/0/sync = true
+properties/1/path = NodePath("Lens on:visible")
+properties/1/spawn = false
+properties/1/sync = true
+properties/2/path = NodePath("Light:visible")
+properties/2/spawn = false
+properties/2/sync = true
+properties/3/path = NodePath(".:itemStats")
+properties/3/spawn = false
+properties/3/sync = true
+properties/4/path = NodePath(".:itemProps")
+properties/4/spawn = false
+properties/4/sync = true
+
 [node name="Flashlight" type="RigidBody3D"]
 continuous_cd = true
 max_contacts_reported = 1
@@ -364,6 +381,9 @@ max_db = -3.0
 pitch_scale = 2.0
 max_polyphony = 10
 doppler_tracking = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_0iovj")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="Battery" to="." method="_on_battery_timeout"]

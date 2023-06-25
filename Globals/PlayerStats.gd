@@ -23,8 +23,11 @@ func _ready():
 func _process(delta):
 	if spawnPoint == null and gameStarted == true:
 		for i in get_node("../Overworld").get_children():
-			if i.has_meta("Spawn"):
+			if i.has_meta("Spawn") and i.get_meta("PlayerID") == 0:
 				_setSpawn(i)
+				if multiplayer.has_multiplayer_peer():
+					i.set_meta("PlayerID", multiplayer.get_unique_id())
+				break
 	globalDelta = delta
 	if playerName == null and gameStarted == true:
 		for i in get_node("../Overworld").get_children():
