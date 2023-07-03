@@ -22,7 +22,8 @@ var drink = preload ("res://Generic Sounds/534336__defaultv__drink_gulp.wav")
 	"Scraps into" : "Aluminum",
 	"Amount" : 12.0
 	}
-
+func _ready():
+	pass
 func USE():
 	openCan()
 

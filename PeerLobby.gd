@@ -3,10 +3,12 @@ var remotePlayerInfo = {
 	"Name": "Client",
 }
 @onready var mp = $"/root/Networking"
+@onready var playerGlobals = $"/root/PlayerStats"
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	multiplayer.connected_to_server.connect(connectedSuccessfully)
 	multiplayer.connection_failed.connect(connectionFailed)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -29,10 +31,13 @@ func _on_join_pressed():
 			mp.connectServer($"Panel/Vbox/Connection/IP".text,int($"Panel/Vbox/Connection/Port".text))
 
 func connectedSuccessfully():
+	playerGlobals.connect("readyForSpawn",startGame)
 	$"Panel/Vbox/Connection/LobbyLabel".text = "Synchronizing world with host..."
 	$"Panel/Vbox/Connection/LobbyLabel".visible = true
+func startGame():
+	print("connected")
+	#mp.disconnect("readyForSpawn",startGame)
 	$"../MainMenu/Menu".startGame()
-
 func connectionFailed():
 	$"Panel/Vbox/Connection/LobbyLabel".visible = true
 	$"Panel/Vbox/Connection/LobbyLabel".text = "Connection Failed. Please check your connection or try another IP."

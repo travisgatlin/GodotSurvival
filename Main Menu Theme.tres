@@ -1,5 +1,30 @@
-[gd_resource type="Theme" format=3 uid="uid://fepdy1ebhxqh"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://fepdy1ebhxqh"]
+
+[sub_resource type="SystemFont" id="SystemFont_ya6dj"]
+font_names = PackedStringArray("Malgun Gothic")
+
+[sub_resource type="SystemFont" id="SystemFont_yi4pi"]
+font_names = PackedStringArray("Arial")
+generate_mipmaps = true
+hinting = 0
+oversampling = 1.1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r1ik0"]
 
 [resource]
 ItemList/font_sizes/font_size = 40
-Label/font_sizes/font_size = 60
+ItemList/fonts/font = SubResource("SystemFont_ya6dj")
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(1, 1, 1, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0)
+Label/constants/line_spacing = 3
+Label/constants/outline_size = 0
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/constants/shadow_outline_size = 1
+Label/font_sizes/HeaderLarge = 60
+Label/font_sizes/HeaderMedium = 35
+Label/font_sizes/HeaderSmall = 16
+Label/fonts/font = SubResource("SystemFont_yi4pi")
+Label/styles/normal = SubResource("StyleBoxEmpty_r1ik0")
+TextEdit/font_sizes/font_size = 16

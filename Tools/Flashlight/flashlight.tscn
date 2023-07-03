@@ -10,6 +10,7 @@ var light = false
 var battery = true
 var click = preload(\"res://Tools/Flashlight/435845__dersuperanton__flashlight-click.wav\")
 var drop = preload(\"res://Generic Sounds/Solid Object Hitting Ground.wav\")
+var projector = preload(\"res://Tools/Flashlight/Flashlight_Flashlight Face_projector.png\")
 #ENTRIES PREFILLED MUST BE DEFINED OR OBJECT WILL NOT WORK
 @export var itemStats = {
 	\"ItemName\" : \"Flashlight\",
@@ -30,6 +31,8 @@ var drop = preload(\"res://Generic Sounds/Solid Object Hitting Ground.wav\")
 	\"Amount\" : 3.5,
 	\"Battery\" : 100
 	}
+func _ready():
+	pass
 func _process(_delta):
 	if light == true:
 		var batteryPercent = floor(($Battery.time_left/$Battery.wait_time)*100)
@@ -38,8 +41,10 @@ func _process(_delta):
 	else:
 		$\"Battery\".paused = true
 func USE():
-	toggleLight()
+	rpc(\"toggleLight\")
 	
+
+@rpc(\"call_local\", \"any_peer\")
 func toggleLight():
 	if battery == true:
 		$\"Sound\".set_stream(click)
@@ -54,16 +59,16 @@ func toggleLight():
 		$\"Light\".visible = false
 		$\"Lens on\".visible = false
 
-
+@rpc(\"call_local\", \"any_peer\")
 func _on_battery_timeout():
-	toggleLight()
+	rpc(\"toggleLight\")
 	battery = false
 	$\"Battery\".stop()
 
+@rpc(\"call_local\", \"any_peer\")
 func newBattery():
 	battery = true
 	$\"Battery\".start($\"Battery\".wait_time)
-
 
 func _on_body_entered(_body):
 	$\"Sound\".set_stream(drop)
@@ -305,20 +310,29 @@ height = 0.441207
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0iovj"]
 properties/0/path = NodePath("Lens off:visible")
-properties/0/spawn = false
+properties/0/spawn = true
 properties/0/sync = true
 properties/1/path = NodePath("Lens on:visible")
-properties/1/spawn = false
+properties/1/spawn = true
 properties/1/sync = true
 properties/2/path = NodePath("Light:visible")
-properties/2/spawn = false
+properties/2/spawn = true
 properties/2/sync = true
 properties/3/path = NodePath(".:itemStats")
-properties/3/spawn = false
+properties/3/spawn = true
 properties/3/sync = true
 properties/4/path = NodePath(".:itemProps")
-properties/4/spawn = false
+properties/4/spawn = true
 properties/4/sync = true
+properties/5/path = NodePath(".:position")
+properties/5/spawn = true
+properties/5/sync = true
+properties/6/path = NodePath(".:rotation")
+properties/6/spawn = true
+properties/6/sync = true
+properties/7/path = NodePath(".:freeze")
+properties/7/spawn = true
+properties/7/sync = true
 
 [node name="Flashlight" type="RigidBody3D"]
 continuous_cd = true
@@ -365,7 +379,7 @@ light_intensity_lumens = 5000.0
 light_temperature = 3500.0
 light_energy = 11.0
 light_indirect_energy = 11.0
-light_volumetric_fog_energy = 13.719
+light_volumetric_fog_energy = 0.0
 light_projector = ExtResource("3_sfakx")
 light_size = 0.037
 light_specular = 0.675
@@ -383,6 +397,7 @@ max_polyphony = 10
 doppler_tracking = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.01
 replication_config = SubResource("SceneReplicationConfig_0iovj")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

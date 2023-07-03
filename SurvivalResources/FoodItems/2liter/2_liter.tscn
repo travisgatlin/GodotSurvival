@@ -145,6 +145,7 @@ max_polyphony = 10
 doppler_tracking = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.01
 replication_config = SubResource("SceneReplicationConfig_5o7rg")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

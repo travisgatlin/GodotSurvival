@@ -6,6 +6,10 @@ extends Node
 @onready var globalDelta = 0
 var inventoryOpen = false
 var gameStarted = false
+var spawners = [
+	
+]
+var nickname=""
 signal barChange(key, value)
 signal respawnPlayer()
 signal playerDeath()
@@ -18,27 +22,38 @@ signal dropItem(index,grid, idFlag)
 signal equipItem(objectID)
 signal itemUsed(object)
 signal invRestack(object)
+signal readyForSpawn()
+signal mainMenu()
 func _ready():
-	pass
+	multiplayer.peer_connected.connect(playerConnected)
 func _process(delta):
 	if spawnPoint == null and gameStarted == true:
-		for i in get_node("../Overworld").get_children():
-			if i.has_meta("Spawn") and i.get_meta("PlayerID") == 0:
-				_setSpawn(i)
-				if multiplayer.has_multiplayer_peer():
-					i.set_meta("PlayerID", multiplayer.get_unique_id())
-				break
+		findSpawn()
 	globalDelta = delta
 	if playerName == null and gameStarted == true:
-		for i in get_node("../Overworld").get_children():
+		for i in $"../Overworld".get_children():
 			if not i.get("playerStats") == null:
 				playerName=i
 				playerPath=i.get_path()
 	if UI == null and gameStarted == true and playerName != null:
-		for i in get_node("../Overworld").get_children():
+		for i in $"../Overworld".get_children():
 			if not i.get("UI") == null:
 				UI = i
 	if spawnPoint != null and gameStarted == true and playerName == null:
 		initialSpawn.emit()
-func _setSpawn(object):
-	spawnPoint = object.get_global_position()
+func playerConnected(id):
+	if multiplayer.is_server():
+		findSpawn(id)
+@rpc("any_peer","call_local")
+func _setSpawn(vector):
+	spawnPoint = vector
+	if !multiplayer.is_server():
+		readyForSpawn.emit()
+
+func findSpawn(id:=1):
+	for i in $"../Overworld".get_children():
+		if i.has_meta("Spawn") and i.get_meta("PlayerID") == 0:
+				i.set_meta("PlayerID", multiplayer.get_unique_id())
+				print(i.get_global_position())
+				rpc_id(id,"_setSpawn", i.get_global_position())
+				break

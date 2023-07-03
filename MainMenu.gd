@@ -1,9 +1,9 @@
 extends ItemList
 @onready var playerGlobals = $/root/PlayerStats
-
+signal percentage(percent)
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print (playerGlobals.gameStarted)
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,8 +28,12 @@ func _on_item_activated(index):
 		get_tree().quit()
 
 
-func startGame():
-	var level = load("res://overworld.tscn").instantiate()
+func startGame(name:="Player"):
+	$"../../LoadingScreen".visible= true
+	ResourceLoader.load_threaded_request("res://overworld.tscn","",true,ResourceLoader.CACHE_MODE_REUSE)
+	var loadStatus = ResourceLoader.load_threaded_get_status("res://overworld.tscn")
+	var levelResource = ResourceLoader.load_threaded_get("res://overworld.tscn")
+	var level = levelResource.instantiate()
 	playerGlobals.gameStarted = true
 	get_node("/root").add_child(level)
-	get_node("/root/Control").queue_free()
+	get_node("/root/Menu").queue_free()

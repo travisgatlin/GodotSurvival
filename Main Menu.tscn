@@ -1,17 +1,94 @@
-[gd_scene load_steps=5 format=3 uid="uid://dcry6qvppbvq5"]
+[gd_scene load_steps=9 format=3 uid="uid://dcry6qvppbvq5"]
 
 [ext_resource type="Script" path="res://HostLobby.gd" id="1_73um5"]
 [ext_resource type="Theme" uid="uid://fepdy1ebhxqh" path="res://Main Menu Theme.tres" id="1_y6uxt"]
+[ext_resource type="Texture2D" uid="uid://dnviyycrqh6d" path="res://UIIcons/GameplayElements/HealthBarEmpty.png" id="2_svlwx"]
 [ext_resource type="Script" path="res://MainMenu.gd" id="2_tn3w8"]
+[ext_resource type="Texture2D" uid="uid://bcb4c3v28i84y" path="res://UIIcons/GameplayElements/HealthBar.png" id="3_rxw8y"]
 [ext_resource type="Script" path="res://PeerLobby.gd" id="4_62jpe"]
 
-[node name="Control" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hmfw6"]
+bg_color = Color(0.184314, 0.176471, 0.160784, 1)
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+corner_detail = 5
+shadow_color = Color(0, 0, 0, 0.184314)
+shadow_size = 3
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_74p6p"]
+blend_mode = 1
+
+[node name="Menu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="LoadingScreen" type="Panel" parent="."]
+visible = false
+z_index = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.45
+anchor_right = 0.75
+anchor_bottom = 0.63
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_y6uxt")
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmfw6")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="LoadingScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.8
+anchor_right = 0.95
+anchor_bottom = 0.8
+offset_top = -26.6
+offset_bottom = 0.399994
+grow_horizontal = 2
+grow_vertical = 0
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("2_svlwx")
+texture_progress = ExtResource("3_rxw8y")
+tint_progress = Color(0.647059, 0, 0.12549, 1)
+
+[node name="Percentage" type="Label" parent="LoadingScreen/TextureProgressBar"]
+material = SubResource("CanvasItemMaterial_74p6p")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.5
+offset_top = -35.5
+offset_right = 43.5
+offset_bottom = 35.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_y6uxt")
+theme_override_colors/font_color = Color(0.27451, 0, 0.0313726, 1)
+theme_override_font_sizes/font_size = 25
+text = "0%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="LoadingScreen"]
+layout_mode = 1
+offset_right = 181.0
+offset_bottom = 45.0
+theme = ExtResource("1_y6uxt")
+theme_override_font_sizes/font_size = 30
+text = "Now loading"
 
 [node name="HostLobby" type="Control" parent="."]
 visible = false
@@ -33,6 +110,7 @@ anchor_bottom = 0.71
 offset_top = 0.199997
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_y6uxt")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HostLobby/Panel"]
 layout_mode = 1
@@ -43,6 +121,7 @@ anchor_right = 0.99
 anchor_bottom = 0.99
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_y6uxt")
 alignment = 1
 
 [node name="FlowContainer" type="FlowContainer" parent="HostLobby/Panel/VBoxContainer"]
@@ -51,11 +130,13 @@ alignment = 1
 
 [node name="Start" type="Button" parent="HostLobby/Panel/VBoxContainer/FlowContainer"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 text = "Start Game"
 
 [node name="NameEdit" type="TextEdit" parent="HostLobby/Panel/VBoxContainer/FlowContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("1_y6uxt")
 text = "HostTervis"
 placeholder_text = "Player Name"
 wrap_mode = 1
@@ -70,9 +151,12 @@ allow_greater = true
 
 [node name="Players" type="HFlowContainer" parent="HostLobby/Panel/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 
 [node name="Label" type="Label" parent="HostLobby/Panel/VBoxContainer/Players"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
+theme_type_variation = &"HeaderSmall"
 text = "Max Players:"
 
 [node name="PlayerCount" type="LineEdit" parent="HostLobby/Panel/VBoxContainer/Players"]
@@ -101,14 +185,17 @@ text = "Hide Password"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HostLobby/Panel/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 
 [node name="PortOverride" type="CheckBox" parent="HostLobby/Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 text = "Override Default Port"
 
 [node name="Port" type="LineEdit" parent="HostLobby/Panel/VBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 placeholder_text = "9090"
 expand_to_text_length = true
 
@@ -116,6 +203,7 @@ expand_to_text_length = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
+theme = ExtResource("1_y6uxt")
 text = "Cancel"
 
 [node name="MainMenu" type="Control" parent="."]
@@ -131,11 +219,13 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -256.5
-offset_right = 256.5
-offset_bottom = 86.0
+offset_left = -263.5
+offset_right = 263.5
+offset_bottom = 71.0
 grow_horizontal = 2
 theme = ExtResource("1_y6uxt")
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/font_size = 60
 text = "Godot Survival"
 uppercase = true
 
@@ -195,42 +285,51 @@ grow_vertical = 2
 [node name="Serverlist" type="ItemList" parent="PeerLobby/Panel/Vbox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_y6uxt")
 
 [node name="Connection" type="HFlowContainer" parent="PeerLobby/Panel/Vbox"]
 layout_mode = 2
 size_flags_vertical = 8
 size_flags_stretch_ratio = 0.0
+theme = ExtResource("1_y6uxt")
 
 [node name="NameEdit" type="TextEdit" parent="PeerLobby/Panel/Vbox/Connection"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
+theme = ExtResource("1_y6uxt")
 text = "PeerTervis"
 placeholder_text = "Player Name"
 scroll_fit_content_height = true
 
 [node name="IP" type="LineEdit" parent="PeerLobby/Panel/Vbox/Connection"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
+text = "localhost"
 placeholder_text = "111.111.11.11"
 expand_to_text_length = true
 
 [node name="Port" type="LineEdit" parent="PeerLobby/Panel/Vbox/Connection"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 text = "9090"
 max_length = 5
 expand_to_text_length = true
 
 [node name="Join" type="Button" parent="PeerLobby/Panel/Vbox/Connection"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 text = "Connect"
 
 [node name="Cancel" type="Button" parent="PeerLobby/Panel/Vbox/Connection"]
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 text = "Cancel"
 
 [node name="LobbyLabel" type="Label" parent="PeerLobby/Panel/Vbox/Connection"]
 visible = false
 layout_mode = 2
+theme = ExtResource("1_y6uxt")
 text = "Waiting for host to start game...."
 
 [connection signal="visibility_changed" from="HostLobby" to="HostLobby" method="_on_visibility_changed"]

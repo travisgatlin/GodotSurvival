@@ -61,6 +61,18 @@ properties/4/sync = true
 properties/5/path = NodePath(".:itemProps")
 properties/5/spawn = false
 properties/5/sync = true
+properties/6/path = NodePath(".:linear_velocity")
+properties/6/spawn = false
+properties/6/sync = true
+properties/7/path = NodePath(".:angular_velocity")
+properties/7/spawn = false
+properties/7/sync = true
+properties/8/path = NodePath(".:position")
+properties/8/spawn = false
+properties/8/sync = true
+properties/9/path = NodePath(".:rotation")
+properties/9/spawn = false
+properties/9/sync = true
 
 [node name="SodaCan" type="RigidBody3D"]
 continuous_cd = true
@@ -90,6 +102,7 @@ max_db = -2.0
 doppler_tracking = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.01
 replication_config = SubResource("SceneReplicationConfig_q0bwx")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

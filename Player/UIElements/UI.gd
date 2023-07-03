@@ -22,6 +22,7 @@ func _ready():
 	playerGlobals.connect("barChange",_on_player_bar_change)
 	playerGlobals.connect("playerDeath", _on_player_death)
 	playerGlobals.connect("invRestack", addInventory)
+	multiplayer.server_disconnected.connect(lostConnection)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	totalInventory = inventoryGrid.get_children()+hotbar.get_children()
@@ -119,3 +120,8 @@ func removeFromInventory(object,_grid):
 func encumberanceCounter():
 	var player = playerGlobals.playerName
 	$"PlayerInventory/Inventory/Encumberance".text = (str(player.playerStats["equipWeight"])+"/"+ str(player.playerStats["maxWeight"]))
+
+func lostConnection():
+	$"LostConnection".visible = true
+	await get_tree().create_timer(5).timeout
+	playerGlobals.emit_signal("mainMenu")

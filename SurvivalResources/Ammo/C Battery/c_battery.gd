@@ -17,7 +17,8 @@ var drop = preload("res://Generic Sounds/Solid Object Hitting Ground.wav")
 	"Amount" : [2.0, 3.0]
 	}
 
-
+func _ready():
+	pass
 func USE():
 	pass
 

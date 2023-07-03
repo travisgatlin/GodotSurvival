@@ -24,17 +24,13 @@ func _on_visibility_changed():
 #		rpc("registerPlayer",localPlayerinfo)
 		return
 
-
-func _on_player_name_pressed():
-	localPlayerinfo["Name"] = $"Panel/VBoxContainer/FlowContainer/NameEdit".get_text()
-	#print (localPlayerinfo)
-
 func _on_start_pressed():
 	if $"Panel/VBoxContainer/HBoxContainer/PortOverride".button_pressed == true:
 		mp.hostServer(int($"Panel/VBoxContainer/HBoxContainer/Port".text),int($"Panel/VBoxContainer/Players/PlayerCount".text))
 	else: 
 		mp.hostServer(mp.defaultPort,int($"Panel/VBoxContainer/Players/PlayerCount".text))
-	$"../MainMenu/Menu".startGame()
+	if multiplayer.is_server():
+		$"../MainMenu/Menu".startGame($"Panel/VBoxContainer/FlowContainer/NameEdit".get_text())
 
 func _on_player_slider_value_changed(value):
 	$"Panel/VBoxContainer/Players/PlayerCount".set("text", int(value))

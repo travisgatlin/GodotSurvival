@@ -2,7 +2,7 @@ extends CharacterBody3D
 signal getInVehicle(state, id)
 @onready var globals = $"/root/Config"
 @onready var playerGlobals = $"/root/PlayerStats"
-#@onready var state_machine = get_node("FirstPerson/MainTree")["parameters/playback"]
+@onready var mp = $"/root/Networking"
 @onready var mainTree = $"FirstPerson/MainTree"
 @onready var animationBlends = {
 	"Movement": "parameters/Locomotion",
@@ -39,7 +39,7 @@ var notPlayer = false
 @export var dead = false
 
 @export var stamina = {
-	"total": 100.0,
+	"total": 10000.0,
 	"jumping": 15,
 	"punching": 20,
 	"meleeSwing": 15,
@@ -66,17 +66,19 @@ var notPlayer = false
 }
 @export var crouching = {
 	"isCrouching":false,
-	"height":1.0,
+	"height":1.25,
 	"walkSpeed": 1.5,
 }
 var currentRunSpeed = 5.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
-	if notPlayer == true:
-		$"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/default".set("cast_shadow", 1)
-	$"FirstPerson/PlayerView/ItemSelect".add_exception(self)
-	animation("Movement", false , "Walk",0)
+	animation.rpc("Movement", false, "Walk")
+	if multiplayer.has_multiplayer_peer():
+		for i in mp.peerList.size():
+			if mp.peerList[i] != multiplayer.get_unique_id():
+				mp.rpc("spawnInstance",mp.peerList[i])
+	self.name = str(multiplayer.get_unique_id())
 	if respawnFlag == true or initialSpawn == true:
 		
 		if playerGlobals.spawnPoint != null:
@@ -123,9 +125,9 @@ func _physics_process(delta):
 		move_and_slide()
 
 func _process(_delta):
-	
+	#mp.rpc("updateCoords",multiplayer.get_unique_id(),self.get_global_position(),self.rotation.y)
 	onLadder = ladderCheck()
-	
+	rpc("syncLocation",self.get_global_position(),$"FirstPerson/DummyAnimated".rotation.y)
 	climbLadder()
 	if inVehicle==true and currentVehicle != null:
 		get_node(".").global_transform.origin = currentVehicle.get_global_position()
@@ -137,16 +139,16 @@ func _process(_delta):
 	input_dir = Input.get_vector("left","right","forward","back")
 	
 	if crouching["isCrouching"] == false and onLadder == false:
-		moveAnimController("Front","Side", input_dir)
+		moveAnimController.rpc("Front","Side", input_dir)
 	
 	elif crouching["isCrouching"] == true:
-		moveAnimController("Crouch Front", "Crouch Side", input_dir)
+		moveAnimController.rpc("Crouch Front", "Crouch Side", input_dir)
 	
 	elif onLadder == true:
-		moveAnimController("Ladder", null, input_dir)
+		moveAnimController.rpc("Ladder", null, input_dir)
 	
 	elif inVehicle == true:
-		moveAnimController("Swimming", null, input_dir)
+		moveAnimController.rpc("Swimming", null, input_dir)
 	
 	if playerStats["health"] <= 0:
 		_on_death()
@@ -188,7 +190,7 @@ func _unequip():
 	equipped = null
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
-	animation("Death", false, "Death")
+	animation.rpc("Death", false, "Death")
 	#get_node("BodyCollision").shape.height = 0.5
 	dead = true
 
@@ -197,7 +199,7 @@ func _crouch():
 		crouching["isCrouching"] = !crouching["isCrouching"]
 		
 	if crouching["isCrouching"] == true:
-		animation("Movement", false, "Crouch")
+		animation.rpc("Movement", false, "Crouch")
 		var crouchPosition = playerStats["height"] - crouching["height"]
 		$"BodyCollision2".shape.height = crouching["height"]
 		$"FirstPerson/DummyAnimated".position.y = crouchPosition
@@ -213,15 +215,15 @@ func _sprint():
 	if crouching["isCrouching"] == false and stamina["total"] > 0:
 		currentRunSpeed = playerStats["runSpeed"]
 		if velocity.z != 0:
-			animation("Movement", false, "Sprint")
+			animation.rpc("Movement", false, "Sprint")
 			_staminadrain(stamina["sprinting"])
 
 func _walk():
-	animation("Movement", false, "Walk",0)
+	animation.rpc("Movement", false, "Walk",0)
 	currentRunSpeed = playerStats["walkSpeed"]
 
 func _staminadrain(amount):
-	get_node("StaminaRegen").start(stamina["regenWaitTime"])
+	$"StaminaRegen".start(stamina["regenWaitTime"])
 	stamina["total"] = stamina["total"] - amount
 	playerGlobals.emit_signal("barChange","stamina", stamina["total"])
 
@@ -240,7 +242,7 @@ func _jump():
 		_crouchCheck()
 		if _crouchCheck() == false or crouching["isCrouching"] == false:
 			if onLadder == false:
-				animation("Jump")
+				animation.rpc("Jump")
 				velocity.y = playerStats["jumpHeight"]
 			_staminadrain(stamina["jumping"])
 
@@ -278,17 +280,17 @@ func _vehicleSelect():
 func _fallDamage():
 	if not is_on_floor():
 		if onLadder == false and crouching["isCrouching"] == false and !$"FallCheck".is_colliding():
-			animation("Falling", false, str(false), 1)
+			animation.rpc("Falling", false, str(false), 1)
 		elif onLadder == true:
-			animation("Falling", false, str(false), 0)
+			animation.rpc("Falling", false, str(false), 0)
 		if self.velocity.y < -10:
 			lastVelocity = self.velocity.y
 	else:
-		animation("Falling", false, str(false), 0)
+		animation.rpc("Falling", false, str(false), 0)
 		calculatedDamage = lastVelocity*-1*playerStats["fallDamageMultiplier"]
 		lastVelocity=0
 		if calculatedDamage > 0:
-			animation("Hard Landing")
+			animation.rpc("Hard Landing")
 			_incomingDamage(round(calculatedDamage))
 
 func _incomingDamage(amount):
@@ -311,15 +313,17 @@ func ladderCheck():
 
 func climbLadder():
 	if onLadder == true:
-		animation("Movement", false,"OnLadder")
+		animation.rpc("Movement", false,"OnLadder")
 		velocity.y = input_dir.y*-playerStats["climbLadderSpeed"]
 	else: 
 		onLadder = false
 
 func respawnSetup():
+	print("spawned")
 	respawnFlag = true
 	get_node("FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/BoneAttachment3D/Deathcam").clear_current(false)
-		
+
+@rpc("unreliable","any_peer","call_local")
 func animation(key,oneshot:=true,state:=str(false),value:=0, time:=0.2):
 	if state != str(false) and oneshot == false:
 		if state != mainTree[animationBlends[key]+"/current_state"]:
@@ -328,7 +332,7 @@ func animation(key,oneshot:=true,state:=str(false),value:=0, time:=0.2):
 		mainTree.set(animationBlends[key], AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	if oneshot == false and state == "false":
 		create_tween().tween_property(mainTree,animationBlends[key],value,time)
-
+@rpc("unreliable","any_peer","call_local")
 func moveAnimController(moveset1,moveset2,vector2):
 	var tween = create_tween().set_parallel(true)
 	if moveset1 != null:
@@ -349,6 +353,7 @@ func pickupObject():
 				if selectedObject is RigidBody3D:
 					selectedObject.freeze = true
 				inventory.append(selectedObject)
+				#removeFromTree.rpc(selectedObject.get_path())
 				objParent.remove_child(selectedObject)
 				return selectedObject
 
@@ -389,3 +394,18 @@ func findInventoryIndexFromID(id):
 func useEquipped():
 	if playerGlobals.inventoryOpen == false:
 		equipped.USE()
+
+@rpc("call_remote","any_peer")
+func syncLocation(vector3,yAngle):
+	pass
+#@rpc("call_remote", "any_peer")
+#func removeFromTree(objectPath):
+#	var object = get_node(objectPath)
+#	object.queue_free()
+#
+#@rpc("call_remote","any_peer")
+#func addToTree(objectPath):
+#	for i in globals.objectReference.size():
+#		if objectPath == globals.objectReference[i["ExternalPath"]]:	
+#			print ("Ok")
+#			get_node(objectPath).add_child(globals.objectReference["Variant"])

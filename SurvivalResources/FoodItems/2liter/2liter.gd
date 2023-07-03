@@ -23,6 +23,8 @@ var isOpened = false
 	"Amount" : 15.0
 	}
 
+func _ready():
+	pass
 
 func USE():
 	openBottle()
@@ -44,10 +46,10 @@ func openBottle():
 			$"Sound".play()
 			isOpened = true
 		else:
-			liquidDrain()
+			rpc("liquidDrain")
 	else:
 		return
-
+@rpc("call_local")
 func liquidDrain():
 	var tween = get_tree().create_tween()
 	if $"Sound".is_connected("finished", liquidDrain):
