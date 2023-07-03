@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://rkdgei2xy8au"]
+[gd_scene load_steps=11 format=3 uid="uid://rkdgei2xy8au"]
 
 [ext_resource type="Script" path="res://SurvivalResources/Ammo/C Battery/c_battery.gd" id="1_1o557"]
 [ext_resource type="Texture2D" uid="uid://cp4xxlua20pfl" path="res://SurvivalResources/Ammo/C Battery/C battery_CBattery.png" id="1_nr76e"]
@@ -55,6 +55,20 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_i0u6m")
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tkpk6"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/sync = true
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/sync = true
+properties/2/path = NodePath(".:itemStats")
+properties/2/spawn = true
+properties/2/sync = true
+properties/3/path = NodePath(".:itemProps")
+properties/3/spawn = true
+properties/3/sync = true
+
 [node name="Battery" type="RigidBody3D"]
 continuous_cd = true
 contact_monitor = true
@@ -75,5 +89,9 @@ volume_db = -10.0
 unit_size = 2.0
 max_db = -10.0
 doppler_tracking = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_tkpk6")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

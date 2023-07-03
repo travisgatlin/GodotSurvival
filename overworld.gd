@@ -20,7 +20,7 @@ func _on_ui_respawn_player():
 		var playerSpawned = player.instantiate()
 		var uiSpawn = UI.instantiate()
 		playerSpawned.respawnSetup()
-		#await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.1).timeout
 		add_child(playerSpawned)
 		add_child(uiSpawn)
 
@@ -36,3 +36,4 @@ func mainMenu():
 	$"/root".add_child(newMenu)
 	playerGlobals.gameStarted = false
 	self.queue_free()
+

@@ -116,6 +116,12 @@ properties/4/sync = true
 properties/5/path = NodePath("Liquid:blend_shapes/LiquidTop")
 properties/5/spawn = false
 properties/5/sync = true
+properties/6/path = NodePath("Sound:stream")
+properties/6/spawn = false
+properties/6/sync = true
+properties/7/path = NodePath("Liquid:visible")
+properties/7/spawn = true
+properties/7/sync = true
 
 [node name="2 Liter" type="RigidBody3D"]
 continuous_cd = true

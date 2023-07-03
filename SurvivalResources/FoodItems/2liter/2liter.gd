@@ -63,7 +63,7 @@ func liquidDrain():
 		tween.tween_property($"Liquid", "blend_shapes/Liquid", $"Liquid".get("blend_shapes/Liquid")+0.154,1)
 	if itemProps["Liquid"] <=0 and empty == false:
 		empty = true
-		$"Liquid".queue_free()
+		$"Liquid".visible = false
 		propChange()
 
 func propChange():

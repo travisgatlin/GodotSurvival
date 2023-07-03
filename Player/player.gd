@@ -1,5 +1,6 @@
 extends CharacterBody3D
 signal getInVehicle(state, id)
+@onready var peerID = multiplayer.get_unique_id()
 @onready var globals = $"/root/Config"
 @onready var playerGlobals = $"/root/PlayerStats"
 @onready var mp = $"/root/Networking"
@@ -32,7 +33,6 @@ var respawnFlag = false
 var initialSpawn = true
 var input_dir = Vector2(0,0)
 var equipped = null
-var notPlayer = false
 
 @export var inventory = []
 
@@ -125,10 +125,12 @@ func _physics_process(delta):
 		move_and_slide()
 
 func _process(_delta):
-	#mp.rpc("updateCoords",multiplayer.get_unique_id(),self.get_global_position(),self.rotation.y)
 	onLadder = ladderCheck()
+	
 	rpc("syncLocation",self.get_global_position(),$"FirstPerson/DummyAnimated".rotation.y)
+	
 	climbLadder()
+	
 	if inVehicle==true and currentVehicle != null:
 		get_node(".").global_transform.origin = currentVehicle.get_global_position()
 		currentVehicle.seatCam.make_current()
@@ -160,7 +162,7 @@ func _process(_delta):
 			pickupObject()
 	
 	if Input.is_action_just_pressed("Attack") and equipped != null:
-		useEquipped()
+		useEquipped.rpc()
 	encumberanceAdd()
 	
 func _objectEquip(object):
@@ -197,6 +199,7 @@ func _on_death():
 func _crouch():
 	if _crouchCheck() == false or crouching["isCrouching"] == false:
 		crouching["isCrouching"] = !crouching["isCrouching"]
+		syncCrouching.rpc(crouching)
 		
 	if crouching["isCrouching"] == true:
 		animation.rpc("Movement", false, "Crouch")
@@ -225,11 +228,13 @@ func _walk():
 func _staminadrain(amount):
 	$"StaminaRegen".start(stamina["regenWaitTime"])
 	stamina["total"] = stamina["total"] - amount
+	syncStamina.rpc(stamina)
 	playerGlobals.emit_signal("barChange","stamina", stamina["total"])
 
 func _staminaregen():
 	while stamina["total"] < stamina["max"] and $StaminaRegen.is_stopped():
 		stamina["total"] += stamina["regenRate"]
+		syncStamina(stamina)
 		playerGlobals.emit_signal("barChange", "stamina", stamina["total"])
 		await create_tween().tween_interval(0.02).finished
 		
@@ -297,6 +302,7 @@ func _incomingDamage(amount):
 	incomingDamage = amount
 	playerStats["health"] = playerStats["health"]-amount
 	incomingDamage = 0
+	syncStats(playerStats)
 	playerGlobals.emit_signal("barChange", "health", playerStats["health"])
 
 func ladderCheck():
@@ -332,6 +338,7 @@ func animation(key,oneshot:=true,state:=str(false),value:=0, time:=0.2):
 		mainTree.set(animationBlends[key], AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	if oneshot == false and state == "false":
 		create_tween().tween_property(mainTree,animationBlends[key],value,time)
+
 @rpc("unreliable","any_peer","call_local")
 func moveAnimController(moveset1,moveset2,vector2):
 	var tween = create_tween().set_parallel(true)
@@ -339,7 +346,7 @@ func moveAnimController(moveset1,moveset2,vector2):
 		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset1], vector2.y, 0.1)
 	if moveset2 != null:
 		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
-
+		
 func pickupObject():
 	var objects = $"FirstPerson/PlayerView/ItemSelect".get_collision_count()
 	var selectedObject = null
@@ -353,9 +360,18 @@ func pickupObject():
 				if selectedObject is RigidBody3D:
 					selectedObject.freeze = true
 				inventory.append(selectedObject)
+				pickupSync.rpc(selectedObject.get_parent().get_path(),selectedObject.get_path())
 				#removeFromTree.rpc(selectedObject.get_path())
 				objParent.remove_child(selectedObject)
 				return selectedObject
+
+@rpc("any_peer","call_remote")
+func pickupSync(path,objPath):
+	pass
+
+@rpc("any_peer","call_remote")
+func dropSync(path,objName):
+	pass
 
 func dropObject(index,grid,idFlag:=false):
 	var object = null
@@ -369,6 +385,7 @@ func dropObject(index,grid,idFlag:=false):
 			_unequip()
 			equipped = null
 		$"/root/Overworld/Items".add_child(droppedObject)
+		dropSync.rpc(droppedObject.get_parent().get_path(),droppedObject.name)
 		if droppedObject is RigidBody3D:
 			droppedObject.freeze = false
 			droppedObject.set_angular_velocity(Vector3(0,0,0))
@@ -376,6 +393,7 @@ func dropObject(index,grid,idFlag:=false):
 			droppedObject.linear_velocity.y = 1
 		droppedObject.set_rotation_degrees(Vector3(0,0,0))
 		droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
+		syncObjectLocation.rpc(droppedObject.get_parent().get_path(),$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position(),droppedObject.rotation)
 		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
 		inventory.remove_at(object)
 
@@ -383,6 +401,7 @@ func encumberanceAdd():
 	var weight = 0
 	for i in inventory.size():
 		weight += inventory[i].itemProps["Weight"]
+	syncStats(playerStats)
 	playerStats["equipWeight"] = weight
 
 func findInventoryIndexFromID(id):
@@ -391,6 +410,7 @@ func findInventoryIndexFromID(id):
 		if invEntry.itemStats["id"] == id:
 			return i
 
+@rpc("any_peer","call_local")
 func useEquipped():
 	if playerGlobals.inventoryOpen == false:
 		equipped.USE()
@@ -398,14 +418,15 @@ func useEquipped():
 @rpc("call_remote","any_peer")
 func syncLocation(vector3,yAngle):
 	pass
-#@rpc("call_remote", "any_peer")
-#func removeFromTree(objectPath):
-#	var object = get_node(objectPath)
-#	object.queue_free()
-#
-#@rpc("call_remote","any_peer")
-#func addToTree(objectPath):
-#	for i in globals.objectReference.size():
-#		if objectPath == globals.objectReference[i["ExternalPath"]]:	
-#			print ("Ok")
-#			get_node(objectPath).add_child(globals.objectReference["Variant"])
+@rpc("any_peer","call_local","reliable")
+func syncObjectLocation(path,loc,rot):
+	pass
+@rpc("reliable","any_peer","call_local")
+func syncStats(stats):
+	pass
+@rpc("any_peer","call_remote")
+func syncCrouching(crouch):
+	pass
+@rpc("any_peer","call_remote")
+func syncStamina(stam):
+	pass

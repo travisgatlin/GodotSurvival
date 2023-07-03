@@ -32,7 +32,7 @@ func _process(delta):
 	globalDelta = delta
 	if playerName == null and gameStarted == true:
 		for i in $"../Overworld".get_children():
-			if not i.get("playerStats") == null:
+			if not i.get("playerStats") == null and str(i.get("peerID")) == str(multiplayer.get_unique_id()):
 				playerName=i
 				playerPath=i.get_path()
 	if UI == null and gameStarted == true and playerName != null:
@@ -54,6 +54,5 @@ func findSpawn(id:=1):
 	for i in $"../Overworld".get_children():
 		if i.has_meta("Spawn") and i.get_meta("PlayerID") == 0:
 				i.set_meta("PlayerID", multiplayer.get_unique_id())
-				print(i.get_global_position())
 				rpc_id(id,"_setSpawn", i.get_global_position())
 				break
