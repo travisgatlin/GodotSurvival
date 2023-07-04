@@ -22,6 +22,7 @@ signal getInVehicle(state, id)
 @onready var currentPosition = $BodyCollision2.position
 @onready var cameraPosition = $"FirstPerson/PlayerView".position
 @onready var holdingPosition =$"FirstPerson/PlayerView/EquipPosition"
+var rng = RandomNumberGenerator.new()
 var inWater = false
 var inVehicle = false
 var currentVehicle = null
@@ -165,7 +166,7 @@ func _process(_delta):
 		useEquipped.rpc()
 	encumberanceAdd()
 	
-func _objectEquip(object):
+func _objectEquip(object,id):
 	if equipped != null:
 		_unequip()
 	for i in object.get_child_count():
@@ -175,14 +176,19 @@ func _objectEquip(object):
 			object.set_rotation_degrees(Vector3(0,0,0))
 			if object.get_parent() != holdingPosition:
 				holdingPosition.add_child(object)
+				equipSync.rpc(id)
 			object.set_global_position(holdingPosition.get_global_position())
 			equipped = object
-		
+@rpc("any_peer","call_remote")
+
+func equipSync(objectName):
+	pass
+
 func findEquippableObject(objectID):
 	for i in inventory.size():
 		if inventory[i].itemStats["id"] == objectID:
 			return inventory[i]
-			
+
 func _unequip():
 	for i in equipped.get_child_count():
 		var objects = equipped.get_children()
@@ -190,6 +196,7 @@ func _unequip():
 			objects[i].disabled = false
 	holdingPosition.remove_child(equipped)
 	equipped = null
+
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
 	animation.rpc("Death", false, "Death")
@@ -354,23 +361,23 @@ func pickupObject():
 		for i in objects:
 			var itemParent = str($"FirstPerson/PlayerView/ItemSelect".get_collider(i).get_parent())
 			if "Items" in itemParent:
+				var id = rng.randi()
 				selectedObject = $"FirstPerson/PlayerView/ItemSelect".get_collider(i)
-				playerGlobals.emit_signal("itemPickedUp", selectedObject)
+				playerGlobals.emit_signal("itemPickedUp", selectedObject,id)
 				var objParent = selectedObject.get_parent()
 				if selectedObject is RigidBody3D:
 					selectedObject.freeze = true
-				inventory.append(selectedObject)
-				pickupSync.rpc(selectedObject.get_parent().get_path(),selectedObject.get_path())
-				#removeFromTree.rpc(selectedObject.get_path())
+				inventory.append([selectedObject,id])
+				pickupSync.rpc(selectedObject.get_parent().get_path(),selectedObject.get_path(),id)
 				objParent.remove_child(selectedObject)
 				return selectedObject
 
 @rpc("any_peer","call_remote")
-func pickupSync(path,objPath):
+func pickupSync(path,objPath,objID):
 	pass
 
 @rpc("any_peer","call_remote")
-func dropSync(path,objName):
+func dropSync(path,objName,objID,loc,rot):
 	pass
 
 func dropObject(index,grid,idFlag:=false):
@@ -380,34 +387,35 @@ func dropObject(index,grid,idFlag:=false):
 	else:
 		object = index
 	if range(inventory.size()).has(object):
-		var droppedObject = inventory[object]
+		var array = inventory[object]
+		var droppedObject = array[0]
 		if droppedObject == equipped:
 			_unequip()
 			equipped = null
 		$"/root/Overworld/Items".add_child(droppedObject)
-		dropSync.rpc(droppedObject.get_parent().get_path(),droppedObject.name)
 		if droppedObject is RigidBody3D:
 			droppedObject.freeze = false
 			droppedObject.set_angular_velocity(Vector3(0,0,0))
 			droppedObject.set_axis_velocity(self.velocity)
 			droppedObject.linear_velocity.y = 1
 		droppedObject.set_rotation_degrees(Vector3(0,0,0))
-		droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
-		syncObjectLocation.rpc(droppedObject.get_parent().get_path(),$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position(),droppedObject.rotation)
+		#droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
+		dropSync.rpc(droppedObject.get_parent().get_path(),droppedObject.name,array[1],$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position(),droppedObject.rotation)
 		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
 		inventory.remove_at(object)
 
 func encumberanceAdd():
 	var weight = 0
 	for i in inventory.size():
-		weight += inventory[i].itemProps["Weight"]
+		var invObj = inventory[i]
+		weight += invObj[0].itemProps["Weight"]
 	syncStats(playerStats)
 	playerStats["equipWeight"] = weight
 
 func findInventoryIndexFromID(id):
 	for i in inventory.size():
 		var invEntry = inventory[i]
-		if invEntry.itemStats["id"] == id:
+		if invEntry[0].itemStats["id"] == id:
 			return i
 
 @rpc("any_peer","call_local")
@@ -418,15 +426,21 @@ func useEquipped():
 @rpc("call_remote","any_peer")
 func syncLocation(vector3,yAngle):
 	pass
-@rpc("any_peer","call_local","reliable")
+	
+@rpc("any_peer","call_local")
 func syncObjectLocation(path,loc,rot):
-	pass
+	print(path,loc,rot)
+	get_node(path).set_global_position(loc)
+	get_node(path).rotation = rot
+
 @rpc("reliable","any_peer","call_local")
 func syncStats(stats):
 	pass
+
 @rpc("any_peer","call_remote")
 func syncCrouching(crouch):
 	pass
+
 @rpc("any_peer","call_remote")
 func syncStamina(stam):
 	pass

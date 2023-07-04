@@ -2,6 +2,7 @@ extends TextureButton
 var stack = []
 var icon = null
 var isEquipped = false
+@export var mpID = 0
 @onready var playerGlobals = $"/root/PlayerStats"
 
 # Called when the node enters the scene tree for the first time.
@@ -15,7 +16,8 @@ func _process(_delta):
 #		if shouldBeInStack(stack[i].itemProps) != true:
 #			playerGlobals.emit_signal("invRestack", stack[i])
 
-func setup(ref):
+func setup(ref,id):
+	mpID=id
 	var InvImage = load(str(ref.itemStats["InvIcon"]))
 	icon = InvImage
 	self.set("texture_normal", InvImage)

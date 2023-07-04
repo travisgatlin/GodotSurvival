@@ -82,11 +82,11 @@ func openInventory():
 		$"PlayerInventory".visible = false
 		playerGlobals.inventoryOpen = false
 
-func addInventory(object,grid:=$"PlayerInventory/Inventory/Main/InvScroll/MainInv"):
+func addInventory(object,id,grid:=$"PlayerInventory/Inventory/Main/InvScroll/MainInv"):
 	var stackIndex = objectStackExists(object.itemProps)
 	if stackIndex == null or object.itemStats["Stackable"] == false:
 		var inventoryEntry = entry.instantiate()
-		inventoryEntry.setup(object)
+		inventoryEntry.setup(object,id)
 		inventoryEntry.set_name(object.itemStats["ItemName"])
 		grid.add_child(inventoryEntry)
 	else:

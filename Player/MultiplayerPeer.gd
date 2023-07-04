@@ -17,7 +17,7 @@ extends CharacterBody3D
 	"Swim": "parameters/SwimBlend/blend_amount",
 }
 @export var inventory = []
-
+@export var equipped = Node
 @export var playerStats = {
 	"health": 100,
 	"food": 100,
@@ -52,6 +52,7 @@ extends CharacterBody3D
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
+	equipped = null
 	peerID = self.name
 func _physics_process(delta):
 	pass
@@ -82,18 +83,24 @@ func moveAnimController(moveset1,moveset2,vector2):
 		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
 
 @rpc("any_peer","reliable")
-func pickupSync(path,objPath):
-	inventory.append([get_node(objPath),path])
-	print(inventory)
+func pickupSync(path,objPath,objID):
+	inventory.append([get_node(objPath),path,objID])
+	if get_node(objPath) is RigidBody3D:
+		get_node(objPath).freeze = true
 	get_node(path).remove_child(get_node(objPath))
 	
 @rpc("any_peer","reliable")
-func dropSync(path,objName):
+func dropSync(path,objName,objID,loc,rot):
 	for i in inventory.size():
 		var invSlot = inventory[i]
-		if path == invSlot[1] and objName == invSlot[0].name:
-			print (path, invSlot[1])
+		if invSlot[2] == objID:
+			if invSlot[0] is RigidBody3D:
+				invSlot[0].freeze = false
+			if invSlot[0].get_parent() != null:
+				invSlot[0].get_parent().remove_child(invSlot[0])
 			get_node(path).add_child(invSlot[0])
+			syncObjectLocation.rpc_id(1,invSlot[0].get_path(),loc,rot)
+			inventory.remove_at(i)
 			break
 
 @rpc("any_peer","call_local")
@@ -107,15 +114,15 @@ func syncStats(stats):
 @rpc("any_peer","call_remote")
 func syncCrouching(crouch):
 	crouching = crouch
+	crouch()
 
 @rpc("any_peer","call_remote")
 func syncStamina(stam):
 	stamina = stam
 
-@rpc("any_peer","call_local", "reliable")
+@rpc("any_peer","reliable")
 func syncObjectLocation(path,loc,rot):
-	get_node(path).set_global_rotation(loc)
-	get_node(path).rotation = rot
+	pass
 
 func crouch():
 	if crouching["isCrouching"] == true:
@@ -124,3 +131,15 @@ func crouch():
 	else:
 		$"BodyCollision2".shape.height = playerStats["height"]
 		$"FirstPerson/DummyAnimated".position.y = 0
+@rpc("any_peer","call_remote")
+func equipSync(objectID):
+	for i in inventory.size():
+		var invObj = inventory[i]
+		if invObj[2] == objectID and invObj != null:
+			if equipped != null:
+				$"FirstPerson/PlayerView/EquipPosition".remove_child(equipped)
+				equipped == null
+			equipped = invObj[0]
+			$"FirstPerson/PlayerView/EquipPosition".add_child(invObj[0])
+			invObj[0].set_global_position($"FirstPerson/PlayerView/EquipPosition".get_global_position())
+			break

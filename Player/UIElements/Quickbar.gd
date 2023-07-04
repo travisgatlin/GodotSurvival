@@ -46,4 +46,4 @@ func changeItem():
 			var item = self.get_child(equippedIndex)
 			if item != null: 
 				item.set("isEquipped", true)
-				playerGlobals.emit_signal("equipItem", item.stack[0])
+				playerGlobals.emit_signal("equipItem", item.stack[0],item.mpID)
