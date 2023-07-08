@@ -77,7 +77,6 @@ func _on_body_entered(_body):
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rruqn"]
 resource_name = "Flashlight Body"
-cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.212097, 0.212097, 0.212097, 1)
 metallic = 1.0
@@ -85,7 +84,6 @@ roughness = 0.322857
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cgts7"]
 resource_name = "Flashlight Reflector"
-cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
 metallic = 1.0
@@ -93,7 +91,6 @@ roughness = 0.03
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dapb0"]
 resource_name = "Knurling"
-cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.210682, 0.210682, 0.210682, 1)
 metallic = 1.0
@@ -219,7 +216,6 @@ shadow_mesh = SubResource("ArrayMesh_tdjge")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ntls8"]
 resource_name = "Button"
-cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_color = Color(0, 0, 0, 1)
 normal_enabled = true
@@ -308,31 +304,23 @@ shadow_mesh = SubResource("ArrayMesh_1oqs1")
 radius = 0.0661096
 height = 0.441207
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0iovj"]
-properties/0/path = NodePath("Lens off:visible")
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3r0ma"]
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/sync = true
-properties/1/path = NodePath("Lens on:visible")
+properties/0/watch = false
+properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/sync = true
-properties/2/path = NodePath("Light:visible")
+properties/1/watch = false
+properties/2/path = NodePath(".:itemProps")
 properties/2/spawn = true
 properties/2/sync = true
+properties/2/watch = false
 properties/3/path = NodePath(".:itemStats")
 properties/3/spawn = true
 properties/3/sync = true
-properties/4/path = NodePath(".:itemProps")
-properties/4/spawn = true
-properties/4/sync = true
-properties/5/path = NodePath(".:position")
-properties/5/spawn = true
-properties/5/sync = true
-properties/6/path = NodePath(".:rotation")
-properties/6/spawn = true
-properties/6/sync = true
-properties/7/path = NodePath(".:freeze")
-properties/7/spawn = true
-properties/7/sync = true
+properties/3/watch = false
 
 [node name="Flashlight" type="RigidBody3D"]
 continuous_cd = true
@@ -397,8 +385,8 @@ max_polyphony = 10
 doppler_tracking = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.01
-replication_config = SubResource("SceneReplicationConfig_0iovj")
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_3r0ma")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="Battery" to="." method="_on_battery_timeout"]

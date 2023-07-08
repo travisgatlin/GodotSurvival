@@ -9,7 +9,6 @@ size = Vector3(1.00079, 0.426503, 0.503311)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_84e1s"]
 resource_name = "Box"
-cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("1_u4q54")
 metallic = 1.0

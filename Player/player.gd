@@ -34,6 +34,7 @@ var respawnFlag = false
 var initialSpawn = true
 var input_dir = Vector2(0,0)
 var equipped = null
+var spawnLocation = null
 
 @export var inventory = []
 
@@ -96,6 +97,7 @@ func _ready():
 	self.set_global_rotation(Vector3(0,0,0))
 
 func _physics_process(delta):
+		
 	if not is_on_floor() and inWater == false and inVehicle==false and onLadder == false:
 		velocity.y -= gravity * delta
 		_fallDamage()
@@ -114,7 +116,7 @@ func _physics_process(delta):
 			elif crouching["isCrouching"] == false and onLadder == false:
 				_walk()
 			
-			var direction = (get_node("FirstPerson/PlayerView").transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+			var direction = ($"FirstPerson/PlayerView".transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 			
 			if direction and onLadder == false:
 				velocity.x = direction.x * currentRunSpeed
@@ -249,7 +251,8 @@ func _staminaregen():
 
 func _jump():
 	if onLadder == true:
-		self.velocity = Vector3($"FirstPerson/PlayerView".transform.basis * Vector3(0, 0,1).normalized()*15)
+		pass
+		#self.velocity = Vector3($"FirstPerson/PlayerView".transform.basis * Vector3(0, 0,1).normalized()*15)
 	if is_on_floor() and stamina["total"] > stamina["jumping"]:
 		_crouchCheck()
 		if _crouchCheck() == false or crouching["isCrouching"] == false:
@@ -377,7 +380,7 @@ func pickupSync(path,objPath,objID):
 	pass
 
 @rpc("any_peer","call_remote")
-func dropSync(path,objName,objID,loc,rot):
+func dropSync(path,objID):
 	pass
 
 func dropObject(index,grid,idFlag:=false):
@@ -392,15 +395,20 @@ func dropObject(index,grid,idFlag:=false):
 		if droppedObject == equipped:
 			_unequip()
 			equipped = null
-		$"/root/Overworld/Items".add_child(droppedObject)
 		if droppedObject is RigidBody3D:
 			droppedObject.freeze = false
-			droppedObject.set_angular_velocity(Vector3(0,0,0))
-			droppedObject.set_axis_velocity(self.velocity)
-			droppedObject.linear_velocity.y = 1
-		droppedObject.set_rotation_degrees(Vector3(0,0,0))
-		#droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
-		dropSync.rpc(droppedObject.get_parent().get_path(),droppedObject.name,array[1],$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position(),droppedObject.rotation)
+#			droppedObject.set_angular_velocity(Vector3(0,0,0))
+#			droppedObject.set_axis_velocity(self.velocity)
+#			droppedObject.linear_velocity.y = 1
+#			droppedObject.set_rotation_degrees(Vector3(0,0,0))
+			$"/root/Overworld/Items".add_child(droppedObject)
+			var dropTransform = Transform3D(droppedObject.basis,$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
+			print(dropTransform)
+			PhysicsServer3D.body_set_state (droppedObject.get_rid(),PhysicsServer3D.BODY_STATE_TRANSFORM,dropTransform)
+#			droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
+			
+			dropSync.rpc(droppedObject.get_parent().get_path(),array[1])
+		#syncObjectLocation.rpc(droppedObject.get_path(),$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
 		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
 		inventory.remove_at(object)
 
@@ -428,10 +436,8 @@ func syncLocation(vector3,yAngle):
 	pass
 	
 @rpc("any_peer","call_local")
-func syncObjectLocation(path,loc,rot):
-	print(path,loc,rot)
-	get_node(path).set_global_position(loc)
-	get_node(path).rotation = rot
+func syncObjectLocation(path,loc):
+	pass
 
 @rpc("reliable","any_peer","call_local")
 func syncStats(stats):

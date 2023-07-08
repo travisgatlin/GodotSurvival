@@ -12,7 +12,6 @@ height = 0.0551567
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iu44l"]
 resource_name = "CBattery"
-cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("1_nr76e")
 metallic = 1.0
@@ -59,15 +58,19 @@ shadow_mesh = SubResource("ArrayMesh_i0u6m")
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/sync = true
+properties/0/watch = false
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/sync = true
+properties/1/watch = false
 properties/2/path = NodePath(".:itemStats")
 properties/2/spawn = true
 properties/2/sync = true
+properties/2/watch = false
 properties/3/path = NodePath(".:itemProps")
 properties/3/spawn = true
 properties/3/sync = true
+properties/3/watch = false
 
 [node name="Battery" type="RigidBody3D"]
 continuous_cd = true

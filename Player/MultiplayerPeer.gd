@@ -54,7 +54,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
 	equipped = null
 	peerID = self.name
-func _physics_process(delta):
+func _physics_process(_delta):
 	pass
 func _process(_delta):
 	pass
@@ -90,7 +90,7 @@ func pickupSync(path,objPath,objID):
 	get_node(path).remove_child(get_node(objPath))
 	
 @rpc("any_peer","reliable")
-func dropSync(path,objName,objID,loc,rot):
+func dropSync(path,objID):
 	for i in inventory.size():
 		var invSlot = inventory[i]
 		if invSlot[2] == objID:
@@ -99,7 +99,6 @@ func dropSync(path,objName,objID,loc,rot):
 			if invSlot[0].get_parent() != null:
 				invSlot[0].get_parent().remove_child(invSlot[0])
 			get_node(path).add_child(invSlot[0])
-			syncObjectLocation.rpc_id(1,invSlot[0].get_path(),loc,rot)
 			inventory.remove_at(i)
 			break
 
@@ -120,9 +119,10 @@ func syncCrouching(crouch):
 func syncStamina(stam):
 	stamina = stam
 
-@rpc("any_peer","reliable")
-func syncObjectLocation(path,loc,rot):
-	pass
+@rpc("any_peer","reliable","call_local")
+func syncObjectLocation(path,loc):
+	print (loc)
+	PhysicsServer3D.body_set_state (get_node(path).get_rid(), PhysicsServer3D.BODY_STATE_TRANSFORM,loc)
 
 func crouch():
 	if crouching["isCrouching"] == true:
