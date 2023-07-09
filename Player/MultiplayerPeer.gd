@@ -83,28 +83,24 @@ func moveAnimController(moveset1,moveset2,vector2):
 		tween.tween_property($FirstPerson/MainTree, animationBlends[moveset2], vector2.x, 0.1)
 
 @rpc("any_peer","reliable")
-func pickupSync(path,objPath,objID):
-	inventory.append([get_node(objPath),path,objID])
-	if get_node(objPath) is RigidBody3D:
-		get_node(objPath).freeze = true
-	get_node(path).remove_child(get_node(objPath))
-	
+func pickupSync(path,objName,reference,stats,props):
+	inventory.append([reference,objName,stats,props])
+	get_node((str(path)+"/"+str(objName))).queue_free()
+
 @rpc("any_peer","reliable")
-func dropSync(path,objID):
+func dropSync(path,objname,loc,reference,stats,props):
+	$"/root/Overworld".itemSpawn(reference,objname,loc,stats,props)
 	for i in inventory.size():
 		var invSlot = inventory[i]
-		if invSlot[2] == objID:
-			if invSlot[0] is RigidBody3D:
-				invSlot[0].freeze = false
-			if invSlot[0].get_parent() != null:
-				invSlot[0].get_parent().remove_child(invSlot[0])
-			get_node(path).add_child(invSlot[0])
+		print (invSlot, objname)
+		if invSlot[1] == objname:
 			inventory.remove_at(i)
 			break
 
-@rpc("any_peer","call_local")
+@rpc("any_peer")
 func useEquipped():
-	pass
+	if equipped != null:
+		equipped.USE()
 
 @rpc("any_peer","reliable","call_local")
 func syncStats(stats):
@@ -119,11 +115,6 @@ func syncCrouching(crouch):
 func syncStamina(stam):
 	stamina = stam
 
-@rpc("any_peer","reliable","call_local")
-func syncObjectLocation(path,loc):
-	print (loc)
-	PhysicsServer3D.body_set_state (get_node(path).get_rid(), PhysicsServer3D.BODY_STATE_TRANSFORM,loc)
-
 func crouch():
 	if crouching["isCrouching"] == true:
 		var crouchPosition = playerStats["height"] - crouching["height"]
@@ -131,15 +122,11 @@ func crouch():
 	else:
 		$"BodyCollision2".shape.height = playerStats["height"]
 		$"FirstPerson/DummyAnimated".position.y = 0
+
 @rpc("any_peer","call_remote")
-func equipSync(objectID):
-	for i in inventory.size():
-		var invObj = inventory[i]
-		if invObj[2] == objectID and invObj != null:
-			if equipped != null:
-				$"FirstPerson/PlayerView/EquipPosition".remove_child(equipped)
-				equipped == null
-			equipped = invObj[0]
-			$"FirstPerson/PlayerView/EquipPosition".add_child(invObj[0])
-			invObj[0].set_global_position($"FirstPerson/PlayerView/EquipPosition".get_global_position())
-			break
+func equipSync(reference):
+	pass
+
+@rpc("any_peer","call_remote")
+func invSync(objName,reference,stats,props):
+	inventory.append([objName,reference,stats,props])

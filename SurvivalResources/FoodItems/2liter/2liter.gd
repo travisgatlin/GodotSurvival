@@ -1,10 +1,10 @@
 extends RigidBody3D
+var reference = "res://SurvivalResources/FoodItems/2liter/2_liter.tscn"
 var drop = preload("res://Generic Sounds/Plastic Bottle hit.wav")
 var dropFull = preload("res://Generic Sounds/Solid Object Hitting Ground.wav")
 var open = preload ("res://Generic Sounds/Open 2 liter.wav")
 var drink = preload ("res://Generic Sounds/534336__defaultv__drink_gulp.wav")
-var empty = false
-var isOpened = false
+
 #ENTRIES PREFILLED MUST BE DEFINED OR OBJECT WILL NOT WORK
 @export var itemStats = {
 	"ItemName" : "2 Liter",
@@ -12,7 +12,11 @@ var isOpened = false
 	"Expires" : false,
 	"InvIcon" : "res://InventoryIcons/2LiterFullIcon.png",
 	"Stackable": true,
-	"id": 517621
+	"Liquid": 0,
+	"LiquidTop": 0,
+	"id": 517621,
+	"isOpened" : false,
+	"empty" : false
 }
 #FOR CUSTOM FUNCTIONS, IF SCRAPS INTO AND AMOUNT IS NOT DEFINED WITH AN IN GAME MATERIAL, SCRAPPING OBJECT WILL NOT WORK
 @export var itemProps = {
@@ -24,8 +28,11 @@ var isOpened = false
 	}
 
 func _ready():
-	pass
-
+	updateBlendShape("Liquid","blend_shapes/Liquid")
+	updateBlendShape("LiquidTop","blend_shapes/LiquidTop")
+	if itemProps["Liquid"] <=0 and itemStats["empty"]== false:
+		itemStats["empty"] = true
+		$"Liquid".visible = false
 func USE():
 	openBottle()
 
@@ -38,18 +45,22 @@ func _on_body_entered(_body):
 		$"Sound".set_stream(drop)
 		$"Sound".play()
 
+
 func openBottle():
-	if empty == false:
-		if isOpened == false:
+	if itemStats["empty"] == false:
+		if itemStats["isOpened"] == false:
 			$"Sound".connect("finished", liquidDrain)
 			$"Sound".set_stream(open)
 			$"Sound".play()
-			isOpened = true
+			itemStats["isOpened"] = true
 		else:
-			rpc("liquidDrain")
+			liquidDrain()
 	else:
 		return
-@rpc("call_local")
+
+func updateBlendShape(prop,shape):
+		$"Liquid".set(shape,itemStats[prop])
+
 func liquidDrain():
 	var tween = get_tree().create_tween()
 	if $"Sound".is_connected("finished", liquidDrain):
@@ -59,10 +70,14 @@ func liquidDrain():
 	itemProps["Liquid"] -= 8.0
 	if itemProps["Liquid"] > 51:
 		tween.tween_property($"Liquid", "blend_shapes/LiquidTop", $"Liquid".get("blend_shapes/LiquidTop")+0.5,1)
+		await tween.finished
+		itemStats["LiquidTop"] = $"Liquid".get("blend_shapes/LiquidTop")
 	else:
 		tween.tween_property($"Liquid", "blend_shapes/Liquid", $"Liquid".get("blend_shapes/Liquid")+0.154,1)
-	if itemProps["Liquid"] <=0 and empty == false:
-		empty = true
+		await tween.finished
+		itemStats["Liquid"] = $"Liquid".get("blend_shapes/Liquid")
+	if itemProps["Liquid"] <=0 and itemStats["empty"]== false:
+		itemStats["empty"] = true
 		$"Liquid".visible = false
 		propChange()
 
@@ -80,6 +95,10 @@ func propChange():
 		"Expires" : false,
 		"InvIcon" : "res://InventoryIcons/2LiterIcon.png",
 		"Stackable": true,
-		"id": 911374
+		"id": 911374,
+		"Liquid": 1,
+		"LiquidTop": 1,
+		"isOpened" : true,
+		"empty" : true
 	}
 	

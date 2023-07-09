@@ -1,4 +1,5 @@
 extends RigidBody3D
+var reference = "res://SurvivalResources/Ammo/C Battery/c_battery.tscn"
 var drop = preload("res://Generic Sounds/Solid Object Hitting Ground.wav")
 #ENTRIES PREFILLED MUST BE DEFINED OR OBJECT WILL NOT WORK
 @export var itemStats = {

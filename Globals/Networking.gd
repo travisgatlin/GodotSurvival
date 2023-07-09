@@ -31,8 +31,7 @@ func playerDisconnected(id):
 	deleteInstance(id)
 	
 func playerConnected(id):
-	if multiplayer.is_server():
-		spawnInstance(id)
+	pass
 
 @rpc("call_local","any_peer")
 func spawnInstance(id):

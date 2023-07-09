@@ -31,9 +31,9 @@ func _on_item_activated(index):
 func startGame(name:="Player"):
 	$"../../LoadingScreen".visible= true
 	ResourceLoader.load_threaded_request("res://overworld.tscn","",true,ResourceLoader.CACHE_MODE_REUSE)
-	var loadStatus = ResourceLoader.load_threaded_get_status("res://overworld.tscn")
+	#var loadStatus = ResourceLoader.load_threaded_get_status("res://overworld.tscn")
 	var levelResource = ResourceLoader.load_threaded_get("res://overworld.tscn")
 	var level = levelResource.instantiate()
 	playerGlobals.gameStarted = true
-	get_node("/root").add_child(level)
+	get_node("/root").add_child(level,true)
 	get_node("/root/Menu").queue_free()

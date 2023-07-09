@@ -76,10 +76,6 @@ var currentRunSpeed = 5.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
 	animation.rpc("Movement", false, "Walk")
-	if multiplayer.has_multiplayer_peer():
-		for i in mp.peerList.size():
-			if mp.peerList[i] != multiplayer.get_unique_id():
-				mp.rpc("spawnInstance",mp.peerList[i])
 	self.name = str(multiplayer.get_unique_id())
 	if respawnFlag == true or initialSpawn == true:
 		
@@ -178,12 +174,12 @@ func _objectEquip(object,id):
 			object.set_rotation_degrees(Vector3(0,0,0))
 			if object.get_parent() != holdingPosition:
 				holdingPosition.add_child(object)
-				equipSync.rpc(id)
+				equipSync.rpc(object.reference)
 			object.set_global_position(holdingPosition.get_global_position())
 			equipped = object
-@rpc("any_peer","call_remote")
 
-func equipSync(objectName):
+@rpc("any_peer","call_remote")
+func equipSync(reference):
 	pass
 
 func findEquippableObject(objectID):
@@ -371,17 +367,17 @@ func pickupObject():
 				if selectedObject is RigidBody3D:
 					selectedObject.freeze = true
 				inventory.append([selectedObject,id])
-				pickupSync.rpc(selectedObject.get_parent().get_path(),selectedObject.get_path(),id)
+				pickupSync.rpc(selectedObject.get_parent().get_path(),selectedObject.name,selectedObject.reference,selectedObject.itemStats,selectedObject.itemProps)
 				objParent.remove_child(selectedObject)
 				return selectedObject
 
 @rpc("any_peer","call_remote")
-func pickupSync(path,objPath,objID):
+func pickupSync(path,reference,stats,props):
 	pass
 
-@rpc("any_peer","call_remote")
-func dropSync(path,objID):
-	pass
+@rpc("any_peer","call_local")
+func dropSync(path,objname,loc,reference,stats,props):
+	$"/root/Overworld".itemSpawn(reference,objname,loc,stats,props)
 
 func dropObject(index,grid,idFlag:=false):
 	var object = null
@@ -397,18 +393,13 @@ func dropObject(index,grid,idFlag:=false):
 			equipped = null
 		if droppedObject is RigidBody3D:
 			droppedObject.freeze = false
-#			droppedObject.set_angular_velocity(Vector3(0,0,0))
-#			droppedObject.set_axis_velocity(self.velocity)
-#			droppedObject.linear_velocity.y = 1
-#			droppedObject.set_rotation_degrees(Vector3(0,0,0))
-			$"/root/Overworld/Items".add_child(droppedObject)
+			droppedObject.set_angular_velocity(Vector3(0,0,0))
+			droppedObject.set_axis_velocity(self.velocity)
+			droppedObject.linear_velocity.y = 1
+			droppedObject.set_rotation_degrees(Vector3(0,0,0))
+			#$"/root/Overworld/Items".add_child(droppedObject)
 			var dropTransform = Transform3D(droppedObject.basis,$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
-			print(dropTransform)
-			PhysicsServer3D.body_set_state (droppedObject.get_rid(),PhysicsServer3D.BODY_STATE_TRANSFORM,dropTransform)
-#			droppedObject.set_global_position($"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
-			
-			dropSync.rpc(droppedObject.get_parent().get_path(),array[1])
-		#syncObjectLocation.rpc(droppedObject.get_path(),$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
+			dropSync.rpc($"../Items",droppedObject.name,dropTransform,droppedObject.reference,droppedObject.itemStats,droppedObject.itemProps)
 		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
 		inventory.remove_at(object)
 
@@ -449,4 +440,7 @@ func syncCrouching(crouch):
 
 @rpc("any_peer","call_remote")
 func syncStamina(stam):
+	pass
+@rpc("any_peer","call_remote")
+func invSync(objName,reference,stats,props):
 	pass

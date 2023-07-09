@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://bq7ifrwn61pyx"]
+[gd_scene load_steps=10 format=3 uid="uid://bq7ifrwn61pyx"]
 
+[ext_resource type="Script" path="res://Containers/BasicChest/Chest.gd" id="1_3t0xg"]
 [ext_resource type="Texture2D" uid="uid://46ky1xbpdhj" path="res://Containers/BasicChest/basicchest_Box.png" id="1_u4q54"]
 [ext_resource type="Texture2D" uid="uid://n3qjusrf4wav" path="res://Containers/BasicChest/basicchest_Box_metallic.png" id="2_j3pp1"]
 [ext_resource type="Texture2D" uid="uid://dqkx4cm67xoab" path="res://Containers/BasicChest/basicchest_Box Normal.png" id="3_r72qu"]
@@ -51,7 +52,18 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_2la0w")
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2220y"]
+properties/0/path = NodePath("../..:position")
+properties/0/spawn = true
+properties/0/sync = true
+properties/0/watch = false
+properties/1/path = NodePath("../..:rotation")
+properties/1/spawn = true
+properties/1/sync = true
+properties/1/watch = false
+
 [node name="BasicChest" type="RigidBody3D"]
+script = ExtResource("1_3t0xg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.210535, 0)
@@ -63,3 +75,7 @@ shape = SubResource("BoxShape3D_oywvq")
 transform = Transform3D(-1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0.196832, 0)
 mesh = SubResource("ArrayMesh_b0du4")
 skeleton = NodePath("")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../basicchest/Box")
+replication_config = SubResource("SceneReplicationConfig_2220y")

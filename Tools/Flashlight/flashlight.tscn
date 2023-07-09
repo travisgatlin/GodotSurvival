@@ -6,6 +6,7 @@
 
 [sub_resource type="GDScript" id="GDScript_0fkmg"]
 script/source = "extends RigidBody3D
+var reference = \"res://Tools/Flashlight/flashlight.tscn\"
 var light = false
 var battery = true
 var click = preload(\"res://Tools/Flashlight/435845__dersuperanton__flashlight-click.wav\")
@@ -41,7 +42,7 @@ func _process(_delta):
 	else:
 		$\"Battery\".paused = true
 func USE():
-	rpc(\"toggleLight\")
+	toggleLight()
 	
 
 @rpc(\"call_local\", \"any_peer\")
@@ -385,7 +386,6 @@ max_polyphony = 10
 doppler_tracking = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_3r0ma")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
