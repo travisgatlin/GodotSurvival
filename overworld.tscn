@@ -186,7 +186,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.442879, -0.255441, 1.1455)
 size = Vector3(0.085987, 0.495736, 0.0992744)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Player/MultiplayerPeer.tscn")
 spawn_path = NodePath("..")
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]

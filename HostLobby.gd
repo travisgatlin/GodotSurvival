@@ -30,7 +30,7 @@ func _on_start_pressed():
 	else: 
 		mp.hostServer(mp.defaultPort,int($"Panel/VBoxContainer/Players/PlayerCount".text))
 	if multiplayer.is_server():
-		$"../MainMenu/Menu".startGame($"Panel/VBoxContainer/FlowContainer/NameEdit".get_text())
+		mp.startGame($"Panel/VBoxContainer/FlowContainer/NameEdit".get_text())
 
 func _on_player_slider_value_changed(value):
 	$"Panel/VBoxContainer/Players/PlayerCount".set("text", int(value))

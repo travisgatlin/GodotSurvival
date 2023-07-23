@@ -12,6 +12,7 @@ var totalInventory = null
 @onready var playerGlobals = $"/root/PlayerStats"
 @onready var inventoryGrid = $"PlayerInventory/Inventory/Main/InvScroll/MainInv"
 @onready var hotbar = $"QuickBar/VBoxContainer/Items"
+@onready var mp = $"/root/Networking"
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	playerDeath = false
@@ -106,7 +107,6 @@ func objectStackExists(props):
 			exists = null
 		else:
 			return i
-		#print (inventoryEntries[i].shouldBeInStack(props))
 	return exists
 	
 func removeFromInventory(object,_grid):
@@ -123,5 +123,6 @@ func encumberanceCounter():
 
 func lostConnection():
 	$"LostConnection".visible = true
+	mp.peer.close()
 	await get_tree().create_timer(5).timeout
 	playerGlobals.emit_signal("mainMenu")

@@ -43,9 +43,7 @@ func _process(_delta):
 		$\"Battery\".paused = true
 func USE():
 	toggleLight()
-	
 
-@rpc(\"call_local\", \"any_peer\")
 func toggleLight():
 	if battery == true:
 		$\"Sound\".set_stream(click)
@@ -60,13 +58,10 @@ func toggleLight():
 		$\"Light\".visible = false
 		$\"Lens on\".visible = false
 
-@rpc(\"call_local\", \"any_peer\")
 func _on_battery_timeout():
-	rpc(\"toggleLight\")
 	battery = false
 	$\"Battery\".stop()
 
-@rpc(\"call_local\", \"any_peer\")
 func newBattery():
 	battery = true
 	$\"Battery\".start($\"Battery\".wait_time)

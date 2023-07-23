@@ -88,19 +88,19 @@ func pickupSync(path,objName,reference,stats,props):
 	get_node((str(path)+"/"+str(objName))).queue_free()
 
 @rpc("any_peer","reliable")
-func dropSync(path,objname,loc,reference,stats,props):
+func dropSync(_path,objname,loc,reference,stats,props):
 	$"/root/Overworld".itemSpawn(reference,objname,loc,stats,props)
 	for i in inventory.size():
 		var invSlot = inventory[i]
-		print (invSlot, objname)
 		if invSlot[1] == objname:
 			inventory.remove_at(i)
 			break
 
-@rpc("any_peer")
+@rpc("any_peer","call_local")
 func useEquipped():
 	if equipped != null:
-		equipped.USE()
+		var equippedItem = $"FirstPerson/PlayerView/EquipPosition".get_child(0)
+		equippedItem.USE()
 
 @rpc("any_peer","reliable","call_local")
 func syncStats(stats):
@@ -109,23 +109,35 @@ func syncStats(stats):
 @rpc("any_peer","call_remote")
 func syncCrouching(crouch):
 	crouching = crouch
-	crouch()
 
 @rpc("any_peer","call_remote")
 func syncStamina(stam):
 	stamina = stam
 
-func crouch():
-	if crouching["isCrouching"] == true:
-		var crouchPosition = playerStats["height"] - crouching["height"]
-		$"FirstPerson/DummyAnimated".position.y = crouchPosition
-	else:
-		$"BodyCollision2".shape.height = playerStats["height"]
-		$"FirstPerson/DummyAnimated".position.y = 0
-
 @rpc("any_peer","call_remote")
-func equipSync(reference):
-	pass
+func equipSync(reference,itemName,props,stats):
+	var itemToBeEquipped = load(reference)
+	var itemInstance = itemToBeEquipped.instantiate()
+	if equipped != null:
+		_unequip()
+	equipped = itemInstance
+	var itemChildren = itemInstance.get_children()
+	for i in itemChildren.size():
+		if itemChildren[i] is CollisionObject3D:
+			itemChildren[i].disable = true
+			break
+	itemInstance.name = itemName
+	itemInstance.itemProps = props
+	itemInstance.itemStats = stats
+	itemInstance.freeze = true
+	$"FirstPerson/PlayerView/EquipPosition".add_child(itemInstance)
+	$"/root/Overworld".itemLocationSync(itemInstance.get_path(),$"FirstPerson/PlayerView/EquipPosition".get_global_position())
+
+@rpc ("any_peer","call_remote")
+func _unequip():
+	for i in $"FirstPerson/PlayerView/EquipPosition".get_children().size():
+		equipped = null
+		$"FirstPerson/PlayerView/EquipPosition".get_child(i).queue_free()
 
 @rpc("any_peer","call_remote")
 func invSync(objName,reference,stats,props):

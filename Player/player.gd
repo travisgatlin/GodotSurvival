@@ -5,6 +5,7 @@ signal getInVehicle(state, id)
 @onready var playerGlobals = $"/root/PlayerStats"
 @onready var mp = $"/root/Networking"
 @onready var mainTree = $"FirstPerson/MainTree"
+@onready var overworld = self.get_parent()
 @onready var animationBlends = {
 	"Movement": "parameters/Locomotion",
 	"Jump": "parameters/Jump/request",
@@ -161,12 +162,13 @@ func _process(_delta):
 			pickupObject()
 	
 	if Input.is_action_just_pressed("Attack") and equipped != null:
-		useEquipped.rpc()
+		if playerGlobals.inventoryOpen == false:
+			useEquipped()
 	encumberanceAdd()
 	
 func _objectEquip(object,id):
 	if equipped != null:
-		_unequip()
+		_unequip.rpc()
 	for i in object.get_child_count():
 		var objects = object.get_children()
 		if objects[i] is CollisionShape3D:
@@ -174,19 +176,19 @@ func _objectEquip(object,id):
 			object.set_rotation_degrees(Vector3(0,0,0))
 			if object.get_parent() != holdingPosition:
 				holdingPosition.add_child(object)
-				equipSync.rpc(object.reference)
+				equipSync.rpc(object.reference,object.name,object.itemProps,object.itemStats)
 			object.set_global_position(holdingPosition.get_global_position())
 			equipped = object
 
 @rpc("any_peer","call_remote")
-func equipSync(reference):
+func equipSync(_reference,itemName,props,stats):
 	pass
 
 func findEquippableObject(objectID):
 	for i in inventory.size():
 		if inventory[i].itemStats["id"] == objectID:
 			return inventory[i]
-
+@rpc("any_peer","call_local")
 func _unequip():
 	for i in equipped.get_child_count():
 		var objects = equipped.get_children()
@@ -194,7 +196,6 @@ func _unequip():
 			objects[i].disabled = false
 	holdingPosition.remove_child(equipped)
 	equipped = null
-
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
 	animation.rpc("Death", false, "Death")
@@ -372,7 +373,7 @@ func pickupObject():
 				return selectedObject
 
 @rpc("any_peer","call_remote")
-func pickupSync(path,reference,stats,props):
+func pickupSync(_path,_reference,_stats_props):
 	pass
 
 @rpc("any_peer","call_local")
@@ -389,7 +390,7 @@ func dropObject(index,grid,idFlag:=false):
 		var array = inventory[object]
 		var droppedObject = array[0]
 		if droppedObject == equipped:
-			_unequip()
+			_unequip.rpc()
 			equipped = null
 		if droppedObject is RigidBody3D:
 			droppedObject.freeze = false
@@ -417,10 +418,8 @@ func findInventoryIndexFromID(id):
 		if invEntry[0].itemStats["id"] == id:
 			return i
 
-@rpc("any_peer","call_local")
 func useEquipped():
-	if playerGlobals.inventoryOpen == false:
-		equipped.USE()
+	overworld.useObject.rpc(equipped.get_path())
 
 @rpc("call_remote","any_peer")
 func syncLocation(vector3,yAngle):
