@@ -20,7 +20,8 @@ func _input(event):
 		self.rotate_object_local(Vector3(1,0,0), event.relative.y * lookSensitivity * lookInverted)
 		$"../DummyAnimated".rotation.y = self.rotation.y
 		var headSyncRot = Quaternion(Vector3(1,0,0),(self.get_rotation().x * -1)).normalized()
-		headSync.rpc(headSyncRot)
+		var objRot = self.get_global_transform()
+		headSync.rpc(headSyncRot,objRot)
 	if rot.x < -75:
 		self.set_rotation_degrees(Vector3(-75,rot.y,0))
 	if rot.x > 85:
@@ -37,5 +38,5 @@ func _on_player_death():
 	playerDead = true
 
 @rpc("any_peer","unreliable","call_local")
-func headSync(rot):
+func headSync(rot,camRot):
 	$"../DummyAnimated/RiggedDummy/Skeleton3D".set_bone_pose_rotation(37,rot)

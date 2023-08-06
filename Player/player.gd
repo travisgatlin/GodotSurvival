@@ -42,7 +42,7 @@ var spawnLocation = null
 @export var dead = false
 
 @export var stamina = {
-	"total": 10000.0,
+	"total": 100.0,
 	"jumping": 15,
 	"punching": 20,
 	"meleeSwing": 15,
@@ -53,8 +53,11 @@ var spawnLocation = null
 }
 @export var playerStats = {
 	"health": 100,
-	"food": 100,
+	"maxHealth":100,
+	"hunger": 100,
+	"maxHunger":100,
 	"thirst":100,
+	"maxThirst":100,
 	"runSpeed":8.0,
 	"walkSpeed":4.0,
 	"jumpHeight":6.0,
@@ -65,7 +68,6 @@ var spawnLocation = null
 	"fallDamageMultiplier":3,
 	"minimumFallDamageTime":1.5,
 	"climbLadderSpeed": 2.0,
-	"maxStairHeight": 1.0,
 }
 @export var crouching = {
 	"isCrouching":false,
@@ -76,6 +78,7 @@ var currentRunSpeed = 5.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
+	$"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D".start()
 	animation.rpc("Movement", false, "Walk")
 	self.name = str(multiplayer.get_unique_id())
 	if respawnFlag == true or initialSpawn == true:
@@ -90,7 +93,13 @@ func _ready():
 	playerGlobals.emit_signal("barChange", "health", playerStats["health"])
 	
 	playerGlobals.connect("dropItem",dropObject)
+	
 	playerGlobals.connect("equipItem", _objectEquip)
+	
+	playerGlobals.connect("eatFood",eatFood)
+	
+	playerGlobals.connect("drinkLiquid",drinkLiquid)
+	
 	self.set_global_rotation(Vector3(0,0,0))
 
 func _physics_process(delta):
@@ -164,6 +173,14 @@ func _process(_delta):
 	if Input.is_action_just_pressed("Attack") and equipped != null:
 		if playerGlobals.inventoryOpen == false:
 			useEquipped()
+	
+	if equipped != null:
+		var tween = get_tree().create_tween()
+		tween.tween_property($"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D","interpolation",1,0.2)
+	elif $"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D".interpolation > 0:
+		var tween = get_tree().create_tween()
+		tween.tween_property($"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D","interpolation",0,0.2)
+	
 	encumberanceAdd()
 	
 func _objectEquip(object,id):
@@ -188,6 +205,7 @@ func findEquippableObject(objectID):
 	for i in inventory.size():
 		if inventory[i].itemStats["id"] == objectID:
 			return inventory[i]
+
 @rpc("any_peer","call_local")
 func _unequip():
 	for i in equipped.get_child_count():
@@ -196,6 +214,7 @@ func _unequip():
 			objects[i].disabled = false
 	holdingPosition.remove_child(equipped)
 	equipped = null
+
 func _on_death():
 	playerGlobals.call_deferred("emit_signal", "playerDeath")
 	animation.rpc("Death", false, "Death")
@@ -371,6 +390,9 @@ func pickupObject():
 				pickupSync.rpc(selectedObject.get_parent().get_path(),selectedObject.name,selectedObject.reference,selectedObject.itemStats,selectedObject.itemProps)
 				objParent.remove_child(selectedObject)
 				return selectedObject
+			elif $"FirstPerson/PlayerView/ItemSelect".get_collider(i).has_meta("Chest"):
+				print("chest")
+				break
 
 @rpc("any_peer","call_remote")
 func pickupSync(_path,_reference,_stats_props):
@@ -398,7 +420,6 @@ func dropObject(index,grid,idFlag:=false):
 			droppedObject.set_axis_velocity(self.velocity)
 			droppedObject.linear_velocity.y = 1
 			droppedObject.set_rotation_degrees(Vector3(0,0,0))
-			#$"/root/Overworld/Items".add_child(droppedObject)
 			var dropTransform = Transform3D(droppedObject.basis,$"FirstPerson/PlayerView/ItemSelect/ClippingChecker/ObjectSpawn".get_global_position())
 			dropSync.rpc($"../Items",droppedObject.name,dropTransform,droppedObject.reference,droppedObject.itemStats,droppedObject.itemProps)
 		playerGlobals.emit_signal("itemDropped",droppedObject,grid)
@@ -440,6 +461,13 @@ func syncCrouching(crouch):
 @rpc("any_peer","call_remote")
 func syncStamina(stam):
 	pass
+
 @rpc("any_peer","call_remote")
 func invSync(objName,reference,stats,props):
+	pass
+
+func eatFood(amount):
+	pass
+	
+func drinkLiquid(amount):
 	pass

@@ -66,9 +66,10 @@ func itemMPSync():
 	pass
 
 @rpc("any_peer","call_local")
-func itemLocationSync(objectPath,location):
-	get_node(objectPath).set_global_position(location)
+func itemLocationSync(objectPath,transform3d):
+	get_node(objectPath).set_global_transform(transform3d)
 
 @rpc("any_peer","call_local")
 func useObject(path):
 	get_node(path).USE()
+	playerGlobals.emit_signal("itemUsed", get_node(path))

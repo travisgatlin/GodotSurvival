@@ -2,13 +2,14 @@ extends TextureButton
 var stack = []
 var icon = null
 var isEquipped = false
+var defaultStats = null
 @export var mpID = 0
 @onready var playerGlobals = $"/root/PlayerStats"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
-
+	playerGlobals.connect("updateItem",findDifferentItem)
+	#playerGlobals.connect("itemUsed",itemUse)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	highlight()
@@ -33,6 +34,7 @@ func propFormatter(prop):
 
 func stackAdd(ref):
 	stack.append(ref)
+	defaultStats = ref.itemStats
 	if stack.size() > 1:
 		if $"Amount".visible == false:
 			$"Amount".visible = true
@@ -40,8 +42,8 @@ func stackAdd(ref):
 	elif stack.size() == 1:
 		$"Amount".visible = false
 		
-func stackRemove():
-	stack.remove_at(0)
+func stackRemove(index:=0):
+	stack.remove_at(index)
 	$"Amount".text = "(" + str(stack.size()) + ")"
 	if stack.size() < 1:
 		self.queue_free()
@@ -58,6 +60,7 @@ func highlight():
 			self.grab_focus()
 		else:
 			self.release_focus()
+
 func _get_drag_data(_at_position):
 	var invItem = TextureRect.new()
 	invItem.set("expand_mode", 1)
@@ -71,3 +74,16 @@ func _can_drop_data(_at_position, _data):
 		return true
 	else:
 		return false
+
+func findDifferentItem():
+	for i in stack.size():
+		if stack[i].itemStats != defaultStats:
+			playerGlobals.emit_signal("invRestack",stack[i],stack[i].itemStats["id"],self.get_parent())
+			stackRemove(i)
+			break
+
+#func itemUse(object):
+#	if defaultStats["singleUse"] == true:
+#		for i in stack.size():
+#			if object == stack[i]:
+#				stackRemove(i)

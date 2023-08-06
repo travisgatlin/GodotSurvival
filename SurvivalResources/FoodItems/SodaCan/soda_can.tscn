@@ -75,7 +75,7 @@ contact_monitor = true
 script = ExtResource("1_e14ky")
 
 [node name="GameCan" type="MeshInstance3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_20ei8")
 skeleton = NodePath("")
 blend_shapes/Crush = 0.0

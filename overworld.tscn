@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://bfdjmvn68vckh"]
+[gd_scene load_steps=15 format=3 uid="uid://bfdjmvn68vckh"]
 
 [ext_resource type="Script" path="res://overworld.gd" id="1_jm50p"]
 [ext_resource type="PackedScene" uid="uid://cmigrniyjx2d6" path="res://SurvivalResources/FoodItems/2liter/2_liter.tscn" id="3_oqhjp"]
 [ext_resource type="PackedScene" uid="uid://rkdgei2xy8au" path="res://SurvivalResources/Ammo/C Battery/c_battery.tscn" id="5_da1xe"]
 [ext_resource type="PackedScene" uid="uid://bmir2b0ethhoa" path="res://TestLevel/test_building.tscn" id="5_s3flu"]
+[ext_resource type="PackedScene" uid="uid://xddegl3h40dj" path="res://SurvivalResources/FoodItems/Chips/Bag of Chips.tscn" id="6_2boos"]
 [ext_resource type="PackedScene" uid="uid://dkjx46pr27guo" path="res://Tools/Flashlight/flashlight.tscn" id="6_2gq7a"]
 [ext_resource type="PackedScene" uid="uid://l737u4w57mlj" path="res://SurvivalResources/FoodItems/SodaCan/soda_can.tscn" id="6_3bk61"]
 [ext_resource type="PackedScene" uid="uid://c1n1w1314sa2n" path="res://MiscItems/test_ladder.tscn" id="8_ccw4p"]
@@ -111,7 +112,7 @@ size = Vector3(9.89102, 2, 10.8809)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.37229, 1.51757, -0.747203)
 
 [node name="Battery" parent="Items" instance=ExtResource("5_da1xe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.141562)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61942, 1.4758, 0.134147)
 
 [node name="Battery2" parent="Items" instance=ExtResource("5_da1xe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.259845)
@@ -126,7 +127,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62559, 1.4758, 0.497233)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42623, 1.4758, 0.313551)
 
 [node name="2 Liter" parent="Items" instance=ExtResource("3_oqhjp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5542, 1.62258, -1.81383)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72429, 1.62258, -2.17228)
+
+[node name="2 Liter2" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72429, 1.62258, -1.96284)
+
+[node name="2 Liter3" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.53635, 1.62258, -2.17228)
+
+[node name="2 Liter4" parent="Items" instance=ExtResource("3_oqhjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.53635, 1.62258, -1.96284)
 
 [node name="SodaCan" parent="Items" instance=ExtResource("6_3bk61")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72023, 1.54358, -1.06927)
@@ -139,6 +149,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72023, 1.54358, -0.814706)
 
 [node name="SodaCan4" parent="Items" instance=ExtResource("6_3bk61")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72023, 1.54358, -1.54205)
+
+[node name="Bag of Chips" parent="Items" instance=ExtResource("6_2boos")]
+transform = Transform3D(-0.130907, 0, -0.991395, 0, 1, 0, 0.991395, 0, -0.130907, -1.74582, 1.57666, 0.741872)
+
+[node name="Bag of Chips2" parent="Items" instance=ExtResource("6_2boos")]
+transform = Transform3D(-0.130907, 0, -0.991395, 0, 1, 0, 0.991395, 0, -0.130907, -1.74582, 1.57666, 0.999425)
+
+[node name="Bag of Chips3" parent="Items" instance=ExtResource("6_2boos")]
+transform = Transform3D(-0.130907, 0, -0.991395, 0, 1, 0, 0.991395, 0, -0.130907, -1.74582, 1.57666, 1.2533)
 
 [node name="Ladder" parent="." instance=ExtResource("8_ccw4p")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.558984, 0.671872, -0.22945)
@@ -232,4 +251,6 @@ enable_shadows = true
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.88783, 0.375025, 5.39247)
 
 [node name="BasicChest" parent="." instance=ExtResource("8_p2qk8")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.55517, 0.425148, -3.60462)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.55517, 0.453378, -3.60462)
+metadata/Chest = true
+metadata/Weight = 100

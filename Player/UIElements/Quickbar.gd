@@ -4,7 +4,7 @@ extends GridContainer
 var equippedIndex = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	playerGlobals.connect("updateItem",changeItem)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -15,15 +15,15 @@ func _process(_delta):
 	
 	if Input.is_action_just_released("hotbarScrollDown"):
 		equippedIndex += 1
-		changeItem()
+		changeItem(equippedIndex)
 	
 	if Input.is_action_just_released("hotbarScrollUp"):
 		equippedIndex -= 1
-		changeItem()
+		changeItem(equippedIndex)
 	
 	if equippedIndex > self.get_child_count()-1:
 		equippedIndex = 0
-		changeItem()
+		changeItem(equippedIndex)
 	
 	elif equippedIndex < 0:
 		equippedIndex = self.get_child_count()-1
@@ -39,9 +39,9 @@ func _drop_data(_at_position, data):
 	old.remove_child(data)
 	self.add_child(data)
 	if self.get_child_count() == 1:
-		changeItem()
+		changeItem(equippedIndex)
 
-func changeItem():
+func changeItem(index):
 		if equippedIndex <= self.get_child_count()-1 and self.get_child_count() != 0:
 			var item = self.get_child(equippedIndex)
 			if item != null: 

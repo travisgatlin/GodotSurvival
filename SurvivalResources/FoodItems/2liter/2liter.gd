@@ -1,4 +1,5 @@
 extends RigidBody3D
+@onready var playerGlobals = $"/root/PlayerStats"
 var reference = "res://SurvivalResources/FoodItems/2liter/2_liter.tscn"
 var drop = preload("res://Generic Sounds/Plastic Bottle hit.wav")
 var dropFull = preload("res://Generic Sounds/Solid Object Hitting Ground.wav")
@@ -8,7 +9,7 @@ var drink = preload ("res://Generic Sounds/534336__defaultv__drink_gulp.wav")
 #ENTRIES PREFILLED MUST BE DEFINED OR OBJECT WILL NOT WORK
 @export var itemStats = {
 	"ItemName" : "2 Liter",
-	"ItemType" : "Drink",
+	"ItemType" : "Food",
 	"Expires" : false,
 	"InvIcon" : "res://InventoryIcons/2LiterFullIcon.png",
 	"Stackable": true,
@@ -16,7 +17,8 @@ var drink = preload ("res://Generic Sounds/534336__defaultv__drink_gulp.wav")
 	"LiquidTop": 0,
 	"id": 517621,
 	"isOpened" : false,
-	"empty" : false
+	"empty" : false,
+	"singleUse": false
 }
 #FOR CUSTOM FUNCTIONS, IF SCRAPS INTO AND AMOUNT IS NOT DEFINED WITH AN IN GAME MATERIAL, SCRAPPING OBJECT WILL NOT WORK
 @export var itemProps = {
@@ -67,6 +69,7 @@ func liquidDrain():
 		$"Sound".disconnect("finished",liquidDrain)
 	$"Sound".set_stream(drink)
 	$"Sound".play()
+	playerGlobals.emit_signal("drinkLiquid",8.0)
 	itemProps["Liquid"] -= 8.0
 	if itemProps["Liquid"] > 51:
 		tween.tween_property($"Liquid", "blend_shapes/LiquidTop", $"Liquid".get("blend_shapes/LiquidTop")+0.5,1)
@@ -87,7 +90,7 @@ func propChange():
 		"Liquid": 0,
 		"Weight": 0.5,
 		"Scraps into": "Plastic",
-		"Amount": 15.0
+		"Amount": 15.0,
 	}
 	itemStats = {
 		"ItemName" : "Empty 2 liter",
@@ -99,6 +102,7 @@ func propChange():
 		"Liquid": 1,
 		"LiquidTop": 1,
 		"isOpened" : true,
-		"empty" : true
+		"empty" : true,
+		"singleUse": false
 	}
-	
+	playerGlobals.emit_signal("updateItem")

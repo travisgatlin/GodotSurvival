@@ -5,9 +5,12 @@ var initialInventoryGen = false
 var mouseVisible = false
 var gamePaused = false
 var playerDeath = false
-var inventoryUpdate = false
 var entry = preload("res://Player/Inventory Item Base.tscn")
 var totalInventory = null
+var inChest = false
+var invTabs = ["All"]
+var openInvSound = load("res://Generic Sounds/openbag.mp3")
+var pickupSound = load ("res://Generic Sounds/pickup.mp3")
 @onready var network = $"/root/Networking"
 @onready var playerGlobals = $"/root/PlayerStats"
 @onready var inventoryGrid = $"PlayerInventory/Inventory/Main/InvScroll/MainInv"
@@ -72,10 +75,12 @@ func _debugbox(string):
 
 func openInventory():
 	inventory = !inventory
+	populateTabs(totalInventory)
 	if inventory == true:
 		$"Crosshair".visible = false
 		$"PlayerInventory".visible = true
 		mouseVisible = true
+		playSound(openInvSound)
 		playerGlobals.inventoryOpen = true
 	else:
 		$"Crosshair".visible = true
@@ -84,29 +89,26 @@ func openInventory():
 		playerGlobals.inventoryOpen = false
 
 func addInventory(object,id,grid:=$"PlayerInventory/Inventory/Main/InvScroll/MainInv"):
-	var stackIndex = objectStackExists(object.itemProps)
+	var stackIndex = objectStackExists(object.itemStats)
+	playSound(pickupSound)
 	if stackIndex == null or object.itemStats["Stackable"] == false:
 		var inventoryEntry = entry.instantiate()
 		inventoryEntry.setup(object,id)
 		inventoryEntry.set_name(object.itemStats["ItemName"])
 		grid.add_child(inventoryEntry)
+		
 	else:
-		totalInventory[stackIndex].stackAdd(object)
+		totalInventory[stackIndex[0]].stackAdd(object)
 
-func amountInStack(array,id):
-	var amount = 0
-	for i in array.size():
-		if array[i].itemStats["id"] == id:
-			amount+=1
-	return amount
+
 	
-func objectStackExists(props):
+func objectStackExists(stats):
 	var exists = null
 	for i in totalInventory.size():
-		if totalInventory[i].stack[0].itemProps != props:
+		if totalInventory[i].defaultStats != stats:
 			exists = null
 		else:
-			return i
+			return [i,totalInventory[i].get_parent()]
 	return exists
 	
 func removeFromInventory(object,_grid):
@@ -117,12 +119,51 @@ func removeFromInventory(object,_grid):
 			else:
 				totalInventory[i].stackRemove()
 				break
+
 func encumberanceCounter():
 	var player = playerGlobals.playerName
-	$"PlayerInventory/Inventory/Encumberance".text = (str(player.playerStats["equipWeight"])+"/"+ str(player.playerStats["maxWeight"]))
+	$"PlayerInventory/Inventory/HBoxContainer/Encumberance".text = (str(player.playerStats["equipWeight"])+"/"+ str(player.playerStats["maxWeight"]))
 
 func lostConnection():
 	$"LostConnection".visible = true
 	mp.peer.close()
 	await get_tree().create_timer(5).timeout
 	playerGlobals.emit_signal("mainMenu")
+
+
+func _on_sort_tab_tab_selected(tab):
+	var tabBar = $"PlayerInventory/Inventory/Main/SortTab"
+	if tabBar.get_tab_title(tab) != "All":
+		sortTab(tabBar.get_tab_title(tab),totalInventory)
+	else:
+		for i in totalInventory.size():
+			totalInventory[i].visible = true
+
+func populateTabs(inventory):
+	var tabBar = $"PlayerInventory/Inventory/Main/SortTab"
+	for i in inventory.size():
+		var invObject = inventory[i].stack[0]
+		if doesTabExist(invObject.itemStats["ItemType"]) == false:
+			invTabs.append(str(invObject.itemStats["ItemType"]))
+			tabBar.add_tab(str(invObject.itemStats["ItemType"]))
+
+func sortTab(sortTerm,inventory):
+	for i in inventory.size():
+		var invObject = inventory[i].stack[0]
+		if invObject.itemStats["ItemType"] != sortTerm and inventory[i].get_parent() != $"QuickBar/VBoxContainer/Items":
+			inventory[i].visible = false
+		else:
+			inventory[i].visible = true
+
+
+func doesTabExist(tabName):
+	var exists = false
+	for i in invTabs.size():
+		if str(invTabs[i]) == str(tabName):
+			exists = true
+	return exists
+
+func playSound(audio):
+	var player = $"Audio"
+	player.set_stream(audio)
+	player.play()

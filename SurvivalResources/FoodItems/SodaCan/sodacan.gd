@@ -1,4 +1,5 @@
 extends RigidBody3D
+@onready var playerGlobals = $"/root/PlayerStats"
 var reference = "res://SurvivalResources/FoodItems/SodaCan/soda_can.tscn"
 var drop = preload("res://Generic Sounds/Metal ding.wav")
 var dropFull = preload("res://Generic Sounds/Solid Object Hitting Ground.wav")
@@ -8,13 +9,14 @@ var drink = preload ("res://Generic Sounds/534336__defaultv__drink_gulp.wav")
 @export var itemStats = {
 	"Crushed" : false,
 	"ItemName" : "Soda Can",
-	"ItemType" : "Drink",
+	"ItemType" : "Food",
 	"Expires" : false,
 	"InvIcon" : "res://InventoryIcons/sodacanicon.png",
 	"Stackable": true,
 	"id": 233019,
 	"Crush" : 0,
 	"OpenTop" : 0,
+	"singleUse": false
 }
 
 @export var itemProps = {
@@ -29,7 +31,8 @@ func _ready():
 	updateBlendShape("OpenTop","blend_shapes/Open Top")
 	updateBlendShape("Crush","blend_shapes/Crush")
 func USE():
-	openCan()
+	if itemStats["Crushed"] != true:
+		openCan()
 
 func _on_body_entered(_body):
 	if itemStats["Crushed"] == true and is_inside_tree():
@@ -57,8 +60,11 @@ func changeProps():
 		"Crush" : 1,
 		"OpenTop" : 1,
 		"Crushed" : true,
-		"id": 302976
+		"id": 302976,
+		"oldid": 233019,
+		"singleUse": false
 	}
+	playerGlobals.emit_signal("updateItem")
 
 func updateBlendShape(prop,shape,amount:=0.0,time:=0.0):
 	if amount > 0.0:
@@ -80,6 +86,7 @@ func openCan():
 
 func drinking():
 	await get_tree().create_timer(0.5).timeout
+	playerGlobals.emit_signal("drinkLiquid",itemProps["Liquid"])
 	$"Sound".disconnect("finished", drinking)
 	$"Sound".connect("finished", crush)
 	$"Sound".set_stream(drink)

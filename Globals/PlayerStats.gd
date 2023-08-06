@@ -24,6 +24,10 @@ signal itemUsed(object)
 signal invRestack(object)
 signal readyForSpawn()
 signal mainMenu()
+signal updateItem()
+signal openChest(chest)
+signal eatFood(amount)
+signal drinkLiquid(amount)
 func _ready():
 	multiplayer.peer_connected.connect(playerConnected)
 func _process(delta):

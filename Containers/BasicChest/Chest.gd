@@ -10,3 +10,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+
+@rpc("any_peer","call_local")
+func addItem(ref,stats,props):
+	pass
+	
+@rpc("any_peer","call_local")
+func removeItem(index):
+	pass

@@ -18,7 +18,7 @@
 [ext_resource type="Script" path="res://Player/UIElements/Quickbar.gd" id="17_mvye0"]
 [ext_resource type="Texture2D" uid="uid://dysaohiiuvsj5" path="res://UIIcons/GameplayElements/crosshair.png" id="18_av6hk"]
 
-[sub_resource type="CameraTexture" id="CameraTexture_8oo08"]
+[sub_resource type="CameraTexture" id="CameraTexture_y61dr"]
 camera_feed_id = 1
 
 [sub_resource type="SystemFont" id="SystemFont_gd6vl"]
@@ -58,13 +58,18 @@ grow_vertical = 2
 [node name="Inventory" type="Panel" parent="PlayerInventory" groups=["Inventory"]]
 layout_mode = 2
 
-[node name="Encumberance" type="Label" parent="PlayerInventory/Inventory" groups=["Inventory"]]
-layout_mode = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerInventory/Inventory"]
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -43.0
+offset_left = -93.0
 offset_bottom = 26.0
 grow_horizontal = 0
+alignment = 2
+
+[node name="Encumberance" type="Label" parent="PlayerInventory/Inventory/HBoxContainer" groups=["Inventory"]]
+layout_mode = 2
 text = "0/100"
 
 [node name="Main" type="VBoxContainer" parent="PlayerInventory/Inventory"]
@@ -79,6 +84,51 @@ grow_vertical = 2
 layout_mode = 2
 tab_count = 1
 tab_0/title = "All"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerInventory/Inventory/Main"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PlayerInventory/Inventory/Main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Inventory"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label2" type="Label" parent="PlayerInventory/Inventory/Main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "chest"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="ChestScreen" type="HFlowContainer" parent="PlayerInventory/Inventory/Main"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="PlayerInv" type="GridContainer" parent="PlayerInventory/Inventory/Main/ChestScreen"]
+process_mode = 3
+clip_contents = true
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+columns = 5
+script = ExtResource("2_3yggj")
+
+[node name="VSeparator" type="VSeparator" parent="PlayerInventory/Inventory/Main/ChestScreen"]
+layout_mode = 2
+
+[node name="ChestInv" type="GridContainer" parent="PlayerInventory/Inventory/Main/ChestScreen"]
+process_mode = 3
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+columns = 5
+script = ExtResource("2_3yggj")
 
 [node name="InvScroll" type="ScrollContainer" parent="PlayerInventory/Inventory/Main"]
 layout_mode = 2
@@ -98,26 +148,17 @@ script = ExtResource("2_3yggj")
 visible = false
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="PlayerInventory/Stats" groups=["Inventory"]]
-layout_mode = 0
-offset_left = 12.0
-offset_top = 16.0
-offset_right = 684.0
-offset_bottom = 479.0
-auto_height = true
-text_overrun_behavior = 0
-max_columns = 4
-fixed_column_width = 84
-icon_mode = 0
-fixed_icon_size = Vector2i(64, 64)
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerInventory/Stats"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="PlayerInventory/Stats" groups=["Inventory"]]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 31.0
-offset_right = 233.0
-offset_bottom = 447.0
-texture = SubResource("CameraTexture_8oo08")
+[node name="TextureRect" type="TextureRect" parent="PlayerInventory/Stats/HBoxContainer" groups=["Inventory"]]
+layout_mode = 2
+texture = SubResource("CameraTexture_y61dr")
 
 [node name="Suicide" type="TextureButton" parent="."]
 process_mode = 3
@@ -399,6 +440,11 @@ offset_left = -197.0
 offset_bottom = 292.0
 grow_horizontal = 0
 
+[node name="Audio" type="AudioStreamPlayer" parent="."]
+volume_db = 0.75
+max_polyphony = 10
+bus = &"Player"
+
 [node name="LostConnection" type="Panel" parent="."]
 visible = false
 layout_mode = 1
@@ -430,6 +476,7 @@ grow_vertical = 2
 text = "Lost connection to host. Returning to main menu"
 horizontal_alignment = 1
 
+[connection signal="tab_selected" from="PlayerInventory/Inventory/Main/SortTab" to="." method="_on_sort_tab_tab_selected"]
 [connection signal="pressed" from="Suicide" to="Pause Menu" method="_on_suicide_pressed"]
 [connection signal="gamePause" from="Pause Menu" to="." method="_on_pause_menu_game_pause"]
 [connection signal="item_activated" from="Pause Menu" to="Pause Menu" method="_on_item_activated"]

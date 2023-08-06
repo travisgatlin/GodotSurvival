@@ -52,12 +52,20 @@ extends CharacterBody3D
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready():
+	self.set_global_rotation(Vector3(0,0,0))
 	equipped = null
 	peerID = self.name
+	$"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D".start()
 func _physics_process(_delta):
 	pass
 func _process(_delta):
-	pass
+	if equipped != null:
+		var tween = get_tree().create_tween()
+		tween.tween_property($"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D","interpolation",1,0.2)
+	elif $"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D".interpolation > 0:
+		var tween = get_tree().create_tween()
+		tween.tween_property($"FirstPerson/DummyAnimated/RiggedDummy/Skeleton3D/SkeletonIK3D","interpolation",0,0.2)
+
 @rpc("reliable","any_peer")
 func syncLocation(vector3,yAngle):
 	self.set_global_position(vector3)
@@ -131,7 +139,7 @@ func equipSync(reference,itemName,props,stats):
 	itemInstance.itemStats = stats
 	itemInstance.freeze = true
 	$"FirstPerson/PlayerView/EquipPosition".add_child(itemInstance)
-	$"/root/Overworld".itemLocationSync(itemInstance.get_path(),$"FirstPerson/PlayerView/EquipPosition".get_global_position())
+	$"/root/Overworld".itemLocationSync(itemInstance.get_path(),$"FirstPerson/PlayerView/EquipPosition".get_global_transform())
 
 @rpc ("any_peer","call_remote")
 func _unequip():
